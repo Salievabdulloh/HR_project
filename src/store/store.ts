@@ -74,5 +74,13 @@ export const useGetStore = create<GetStore>((set, get) => ({
         localStorage.setItem("user_Info", JSON.stringify(decoded))
 
         return token
+    },
+    editUser: async (data: any) => {
+        try {
+            await api.put('/users/me', data)
+            await get().getRegister()
+        } catch (error) {
+            console.error(error);
+        }
     }
 }))

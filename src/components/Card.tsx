@@ -1,11 +1,21 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import SeeAll from "@/src/components/SeaAll"
+import { BarChart } from '@mui/x-charts/BarChart';
 
 const Card = ({ text, price, grade }: any) => {
 
+    // const [color, setColor] = useState("red")
+
+    // if (grade[0] === "red") {
+    //     setColor("green")
+    // } else {
+    //     setColor("red")
+    // }
+
     return (
         <div className="rounded-[20px] bg-white p-5">
-            <div className="flex gap-20 items-center">
+            <div className="flex justify-between items-center">
                 <h2 className='font-medium text-[20px]'>{text}</h2>
                 <SeeAll />
             </div>
@@ -13,6 +23,24 @@ const Card = ({ text, price, grade }: any) => {
             <div className='flex items-center gap-1'>
                 <p className={`${grade[0] === '+' ? "text-[hsl(120,100%,50%)]" : "text-[red]"}`}>{grade}%</p>
                 <p className='text-gray-500'>Vs Last Week</p>
+            </div>
+            <div className="ml-[-35px]">
+                <BarChart
+                    xAxis={[
+                        {
+                            scaleType: 'band',
+                            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                        },
+                    ]}
+                    series={[
+                        {
+                            data: [4, 6, 5, 8, 7],
+                            color: "red",
+                        }
+                    ]}
+                    width={300}
+                    height={200}
+                />
             </div>
         </div>
     )
