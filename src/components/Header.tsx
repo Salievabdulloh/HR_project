@@ -24,7 +24,7 @@ const Header = () => {
             <div className='flex items-center gap-[25px]'>
                 <Link href='/dashboard'>dashboard</Link>
                 <Link href='/login'>Login</Link>
-                <Link href='/Registration'>Sign up</Link>
+                <Link href='/registration'>Sign up</Link>
                 {token && getRole === 'Employee' && (
                     <MenuAccount />
                 )}

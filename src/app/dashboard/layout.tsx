@@ -18,27 +18,32 @@ const layout: React.FC<layoutProps> = ({ children }) => {
         {
             id: 1,
             name: "Dashboard",
-            icon: <Compass />
+            icon: <Compass />,
+            path: "/dashboard"
         },
         {
             id: 2,
             name: "Employee",
-            icon: <Users />
+            icon: <Users />,
+            path: "/dashboard/employee"
         },
         {
             id: 3,
             name: "Recriutments",
-            icon: <FileSearch />
+            icon: <FileSearch />,
+            path: "/dashboard/Employee"
         },
         {
             id: 4,
             name: "Payroll",
-            icon: <WalletCards />
+            icon: <WalletCards />,
+            path: "/dashboard/Employee"
         },
         {
             id: 5,
             name: "Schedule",
-            icon: <Calendar />
+            icon: <Calendar />,
+            path: "/dashboard/Employee"
         },
     ]
 
@@ -75,7 +80,10 @@ const layout: React.FC<layoutProps> = ({ children }) => {
                 <div className='text-[14px] mb-3 text-[#b4b4b4]'>MAIN</div>
                 <div className="">
                     {items.map(e => (
-                        <div key={e.id} onClick={() => setSelected(e.id)} className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium ${selected === e.id ? "bg-amber-100 font-bold text-amber-400" : ""} gap-2`}>
+                        <div key={e.id} onClick={() => {
+                            setSelected(e.id)
+                            router.push(e.path)
+                        }} className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium ${selected === e.id ? "bg-amber-100 font-bold text-amber-400" : ""} gap-2`}>
                             {e.icon}
                             <p>{e.name}</p>
                         </div>

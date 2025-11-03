@@ -29,7 +29,7 @@ const Registration = () => {
     }
   })
 
-  const { registration, register: user } = useGetStore()
+  const { registration, user } = useGetStore()
 
   const [openEye, setopenEye] = useState(false)
   const [openEye2, setopenEye2] = useState(false)

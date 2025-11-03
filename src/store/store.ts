@@ -6,7 +6,7 @@ import api from '../lib/api'
 interface RegisterData {
     username?: string
     email: string
-    phone?: number
+    phone?: string
     password: string
     confirmPassword?: string
     baseSalary?: number
@@ -22,19 +22,69 @@ interface LoginData {
     password: string
 }
 
+interface EmployeeDate {
+    id: number
+    firstName: string
+    lastName: string
+    position: string
+    hireDate: string
+    baseSalary: number
+    isActive: boolean
+    departmentName: string
+}
+
+interface add {
+}
+
 interface GetStore {
-    user: RegisterData[];
+    user: RegisterData[]
+    employee: EmployeeDate[]
+
+    addDialog: boolean,
+    setaddDialog: (value: boolean) => void
+
     getRegister: () => Promise<void>
+    getEmployee: () => Promise<void>
     registration: (data: RegisterData) => Promise<void>
     login: (data: LoginData) => Promise<string>
+    deleteEmployee: (data: EmployeeDate) => Promise<void>
+    editEmployee: (data: EmployeeDate) => Promise<void>
 }
 
 export const useGetStore = create<GetStore>((set, get) => ({
     user: [],
+    employee: [],
+    addDialog: false,
+    setaddDialog: (value) => set({ addDialog: value }),
     getRegister: async () => {
         try {
             let { data } = await api.get(`/users/me`)
             set(() => ({ user: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getEmployee: async () => {
+        try {
+            let { data } = await api.get(`/employees`)
+            set(() => ({ employee: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    deleteEmployee: async (id) => {
+        try {
+            await api.delete(`/employees/${id}`)
+            await get().getEmployee()
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    editEmployee: async (data: any) => {
+        try {
+            await api.put(`/employees/${data.id}`, data)
+            // log  
+            await get().getEmployee()
         } catch (error) {
             console.error(error)
         }
@@ -82,5 +132,6 @@ export const useGetStore = create<GetStore>((set, get) => ({
         } catch (error) {
             console.error(error);
         }
-    }
+    },
+
 }))
