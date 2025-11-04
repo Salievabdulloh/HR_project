@@ -66,7 +66,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     },
     getEmployee: async () => {
         try {
-            let { data } = await api.get(`/employees`)
+            let { data } = await api.get(`/employees?PageSize=1000`)
             set(() => ({ employee: data }))
         } catch (error) {
             console.error(error)
@@ -104,7 +104,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
                 FirstName: data.firstName,
                 LastName: data.lastName
             })
-            await get().getRegister()
+            await get().getEmployee()
             return res.data
         } catch (error) {
             console.error(error)

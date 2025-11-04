@@ -155,7 +155,7 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                         <Select.Option value="Senior">Senior</Select.Option>
                     </Select>
                     <Input placeholder='Edit hire Date' type="date" value={edithireDate} onChange={(e) => setEdithireDate(e.target.value)} />
-                    <Input placeholder='Edit baseSalary' type='number' value={editbaseSalary} onChange={(e) => setEditbaseSalary(e.target.value)} />
+                    <Input placeholder='Edit baseSalary' type='number' value={editbaseSalary} onChange={(e) => setEditbaseSalary(Number(e.target.value))} />
                     <Select value={editisActive} onChange={(value: boolean) => setEditisActive(value)}>
                         <Select.Option value={true}>Active</Select.Option>
                         <Select.Option value={false}>Incative</Select.Option>
