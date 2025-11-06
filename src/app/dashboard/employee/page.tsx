@@ -38,7 +38,7 @@ const Employee: React.FC = () => {
         }
     })
 
-    const { employee, getEmployee, registration } = useGetStore();
+    const { employee, getEmployee, registration, getRegister, user: getUser, getUsers, allUsers } = useGetStore();
 
     const [search, setSearch] = useState("");
     const [addDialog, setaddDialog] = useState(false);
@@ -52,7 +52,9 @@ const Employee: React.FC = () => {
     const password2 = watch("confirmPassword")
 
     const user = employee?.data;
-    const router = useRouter();
+    const router = useRouter()
+    console.log(allUsers);
+
 
     const SkeletonRow = () => (
         <Stack direction="column" className="p-3">
@@ -89,12 +91,15 @@ const Employee: React.FC = () => {
             }
 
             let res = await registration(data)
+            console.log(res);
 
             if (res) {
                 setaddDialog(false)
                 toast.success(`${data.username} has been added`)
+            } else {
+                toast.error(`${data.username} has not been added`)
             }
-            
+
         } catch (error) {
             console.error(error);
         }
@@ -113,7 +118,10 @@ const Employee: React.FC = () => {
         exit: { opacity: 0 },
     }
 
-    const itemTransition = { type: "spring", stiffness: 400, damping: 30 };
+    const itemTransition = { type: "spring", stiffness: 400, damping: 30 }
+
+    console.log();
+
 
     useEffect(() => {
         const load = async () => {
@@ -140,6 +148,7 @@ const Employee: React.FC = () => {
 
     useEffect(() => {
         getEmployee();
+        getRegister();
     }, []);
 
     return (
@@ -236,16 +245,17 @@ const Employee: React.FC = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <h2 className='font-semibold'>{e.firstName} {e.lastName}</h2>
+                                                    <h2 className='font-semibold'>{e.username ?? e.firstName}</h2>
                                                     <h2 className='text-[gray]'>{e.position}</h2>
                                                 </div>
                                                 <div>
                                                     <h2 className="font-semibold text-lg">{e.firstName} {e.lastName}</h2>
-                                                    <p className="text-sm text-gray-500">{e.position}</p>
                                                 </div>
                                             </div>
                                             <div>
-                                                <BasicMenu name={e.firstName} employeeId={e.id} el={e} />
+                                                {getUser?.length == 0 && (
+                                                    <BasicMenu name={e.firstName} employeeId={e.id} el={e} />
+                                                )}
                                             </div>
                                         </div>
 

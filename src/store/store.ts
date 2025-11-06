@@ -33,29 +33,65 @@ interface EmployeeDate {
     departmentName: string
 }
 
-interface add {
+interface EmployeeByid {
+    id: number
+    firstName: string
+    lastName: string
+    position: string
+    hireDate: string
+    baseSalary: number
+    isActive: boolean
+    departmentName: string
 }
 
+interface GetAllUsers {
+    employeeId?: number
+    username?: string
+    email: string
+    phoneNumber?: string
+}
+
+// interface getUserDepartment{
+
+// }
 interface GetStore {
     user: RegisterData[]
+    allUsers: GetAllUsers[]
     employee: EmployeeDate[]
-
-    addDialog: boolean,
-    setaddDialog: (value: boolean) => void
+    getId: EmployeeByid[]
+    department: []
+    vacation: []
+    payroll: []
+    addDialog: number,
+    setaddDialog: (value: number) => void
 
     getRegister: () => Promise<void>
+    getPayrollRecordTotal: () => Promise<void>
+    getUsersAll: () => Promise<void>
+    getVacationSummary: () => Promise<void>
     getEmployee: () => Promise<void>
-    registration: (data: RegisterData) => Promise<void>
+    getDepartment: () => Promise<void>
     login: (data: LoginData) => Promise<string>
+    registration: (data: RegisterData) => Promise<void>
     deleteEmployee: (data: EmployeeDate) => Promise<void>
     editEmployee: (data: EmployeeDate) => Promise<void>
+    getEmployeeId: (data: EmployeeByid) => Promise<void>
+    editUsers: (data: GetAllUsers) => Promise<void>
 }
 
 export const useGetStore = create<GetStore>((set, get) => ({
     user: [],
     employee: [],
-    addDialog: false,
+    getId: [],
+    allUsers: [],
+    department: [],
+    vacation: [],
+    payroll: [],
+
+    addDialog: 1,
+
     setaddDialog: (value) => set({ addDialog: value }),
+
     getRegister: async () => {
         try {
             let { data } = await api.get(`/users/me`)
@@ -64,10 +100,58 @@ export const useGetStore = create<GetStore>((set, get) => ({
             console.error(error)
         }
     },
+    getDepartment: async () => {
+        try {
+            let { data } = await api.get(`/departments/summary`)
+            set(() => ({ department: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getPayrollRecordTotal: async () => {
+        try {
+            let { data } = await api.get(`/payroll_record/statistics/total-net-pay`)
+            set(() => ({ payroll: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getVacationSummary: async () => {
+        try {
+            let { data } = await api.get(`/vacation_records/summary`)
+            set(() => ({ vacation: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getUsersAll: async () => {
+        try {
+            let { data } = await api.get(`/users`)
+            set(() => ({ allUsers: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    editUsers: async (data) => {
+        try {
+            await api.put(`/users`, data)
+            await get().getUsersAll()
+        } catch (error) {
+            console.error(error)
+        }
+    },
     getEmployee: async () => {
         try {
             let { data } = await api.get(`/employees?PageSize=1000`)
             set(() => ({ employee: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getEmployeeId: async (id) => {
+        try {
+            let { data } = await api.get(`/employees/${id}`)
+            set(() => ({ getId: data }))
         } catch (error) {
             console.error(error)
         }

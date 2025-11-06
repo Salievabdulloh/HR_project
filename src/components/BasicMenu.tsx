@@ -3,7 +3,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Ellipsis, PenBox, Trash2, User2 } from 'lucide-react';
+import { DollarSign, Ellipsis, PenBox, Trash2, User2 } from 'lucide-react';
 import { Input, Modal, Select } from 'antd';
 import { useGetStore } from '../store/store';
 import { useRouter } from 'next/navigation';
@@ -41,10 +41,14 @@ export default function BasicMenu({ employeeId, name, el }: any) {
 
     async function deleteUser() {
         try {
-            await deleteEmployee(employeeId)
+            let res = await deleteEmployee(employeeId)
             setopenModal(false)
-            setIsDeleted(true)
-            toast.success(`${name} deleted successfully`);
+            console.log(res);
+
+            if (res) {
+                setIsDeleted(true)
+                toast.success(`${name} deleted successfully`);
+            }
         } catch (error) {
             console.error(error)
         }
@@ -131,6 +135,14 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                         <p>Profile</p>
                     </div>
                 </MenuItem>
+                <MenuItem
+                // onClick={() => router.push(`/dashboard/${employeeId}`)}
+                >
+                    <div className="flex items-center gap-2">
+                        <DollarSign />
+                        <p>Payroll</p>
+                    </div>
+                </MenuItem>
             </Menu>
             <Modal
                 title={`Are u sure you want to delete ${name}?`}
@@ -147,7 +159,6 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                 <div className="flex gap-2 flex-col">
                     <Input placeholder='Edit First Name' value={editfirstName} onChange={(e) => setEditfirstName(e.target.value)} />
                     <Input placeholder='Edit Last Name' value={editLastName} onChange={(e) => setEditLastName(e.target.value)} />
-                    {/* <Input placeholder='Edit position' /> */}
                     <Select value={editposition} onChange={(value) => setEditposition(value)}>
                         <Select.Option value="Intern">Intern</Select.Option>
                         <Select.Option value="Junior">Junior</Select.Option>

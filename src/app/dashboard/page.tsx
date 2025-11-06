@@ -8,6 +8,7 @@ import Button from "@/src/components/Button"
 import AvgWorkHoursChart from '@/src/components/AvgWorkHoursChart'
 import MemberTypeChart from '@/src/components/MemberTypeChart'
 import MemberList from '@/src/components/MemberList'
+import Card2 from '@/src/components/Card2'
 
 const Dashboard = () => {
 
@@ -57,17 +58,15 @@ const Dashboard = () => {
                     ))}
                 </div>
             </div>
-            <div className="grid grid-cols-2 my-5 gap-5">
-                <AvgWorkHoursChart />
-                <MemberTypeChart />
-            </div>
-            <div className="grid grid-cols-2 mb-5 gap-x-5">
-                <div className="">
-                    <div className="flex gap-5">
-                        <Card text='Total payroll' price='$34.4322' grade={'+24'} />
-                        <Card text='Job Applicant' price='$12.845' grade={'-15'} />
-                    </div>
-                    {/* <div className="rounded-[20px] my-5 bg-white p-5">
+            <div className="flex gap-5">
+                <div className="flex gap-5 items-stretch flex-col">
+                    <AvgWorkHoursChart />
+                    <div className="">
+                        <div className="flex gap-5">
+                            <Card2 text='Total payroll' price='$34.4322' grade={'+24'} />
+                            <Card text='Job Applicant' price='$12.845' grade={'-15'} />
+                        </div>
+                        {/* <div className="rounded-[20px] my-5 bg-white p-5">
                         <div className="flex items-center mb-4 justify-between">
                             <h2 className='font-medium text-[20px]'>List of Member</h2>
                             <div className="flex items-center gap-2">
@@ -78,43 +77,47 @@ const Dashboard = () => {
                         </div>
                         <div className=""></div>
                     </div> */}
-                    <MemberList search={search} />
-                </div>
-                <div className="rounded-[20px] ml-8 bg-white py-5">
-                    <div className="px-5">
-                        <div className="flex items-center mb-4 justify-between">
-                            <h2 className='font-medium text-[20px]'>Schedule</h2>
-                            <SeeAll />
-                        </div>
-                        <div className="flex items-center bg-[hsl(0,0%,95%)] rounded-lg  p-1 m-4 justify-between">
-                            <Button icon={<ArrowLeft size={16} />} />
-                            <p>10 Nov 2025</p>
-                            <Button icon={<ArrowRight size={16} />} />
-                        </div>
+                        <MemberList search={search} />
                     </div>
-                    <div className="mt-8">
-                        <div className={`flex text-[gray] border-b-[1] items-center gap-4`}>
-                            {items.map(e => (
-                                <div
-                                    key={e.id}
-                                    className={`${event === e.id ? "text-[black ] font-semibold border-b-[2] border-[#ff5e00]" : ""} cursor-pointer leading-10 ml-4`}
-                                    onClick={() => setEvent(e.id)}>{e.name}</div>
-                            ))} 
+                </div>
+                <div className="flex gap-5 items-stretch flex-col">
+                    <MemberTypeChart />
+                    <div className="rounded-[20px] ml-8 bg-white py-5">
+                        <div className="px-5">
+                            <div className="flex items-center mb-4 justify-between">
+                                <h2 className='font-medium text-[20px]'>Schedule</h2>
+                                <SeeAll />
+                            </div>
+                            <div className="flex items-center bg-[hsl(0,0%,95%)] rounded-lg  p-1 m-4 justify-between">
+                                <Button icon={<ArrowLeft size={16} />} />
+                                <p>10 Nov 2025</p>
+                                <Button icon={<ArrowRight size={16} />} />
+                            </div>
                         </div>
-                        <div className="m-4">
-                            {event === 1 ? (
-                                <div>
-                                    Event
-                                </div>
-                            ) : event === 2 ? (
-                                <div>
-                                    Celebration
-                                </div>
-                            ) : (
-                                <div>
-                                    Holiday
-                                </div>
-                            )}
+                        <div className="mt-8">
+                            <div className={`flex text-[gray] border-b-[1] items-center gap-4`}>
+                                {items.map(e => (
+                                    <div
+                                        key={e.id}
+                                        className={`${event === e.id ? "text-[black ] font-semibold border-b-[2] border-[#ff5e00]" : ""} cursor-pointer leading-10 ml-4`}
+                                        onClick={() => setEvent(e.id)}>{e.name}</div>
+                                ))}
+                            </div>
+                            <div className="m-4">
+                                {event === 1 ? (
+                                    <div>
+                                        Event
+                                    </div>
+                                ) : event === 2 ? (
+                                    <div>
+                                        Celebration
+                                    </div>
+                                ) : (
+                                    <div>
+                                        Holiday
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -27,14 +27,14 @@ export default function MenuAccount() {
 
     const getToken = localStorage.getItem('access_token')
 
-    const handleClose = (event) => {
+    const handleClose = (event: any) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
         }
         setOpen(false)
     }
 
-    function handleListKeyDown(event) {
+    function handleListKeyDown(event: any) {
         if (event.key === 'Tab') {
             event.preventDefault();
             setOpen(false);

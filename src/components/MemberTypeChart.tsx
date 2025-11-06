@@ -1,13 +1,18 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { MoreHorizontal } from 'lucide-react';
 import type { ApexOptions } from 'apexcharts';
 import SeeAll from './SeaAll'; // fixed filename typo
+import { useGetStore } from '../store/store';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const MemberTypeChart = () => {
+    const { department, getDepartment } = useGetStore()
+
+    const data = Array.isArray(department?.data) ? department.data : [];
+
     const options_7: ApexOptions = {
         chart: {
             toolbar: { show: false },
@@ -36,7 +41,8 @@ const MemberTypeChart = () => {
                 },
             },
         ],
-        labels: ['Admin', 'Staff', 'Members', 'Guests'],
+        // labels: ['Admin', 'Staff', 'Members', 'Guests'],
+        labels: data?.map(e => e.name),
         plotOptions: {
             pie: {
                 donut: {
@@ -46,7 +52,9 @@ const MemberTypeChart = () => {
         },
     };
 
-    const series_7 = [44, 55, 41, 17];
+    const series_7 = data?.map(e => e?.employeeCount)
+
+    useEffect(() => { getDepartment() }, [])
 
     return (
         <div className="rounded-[20px] bg-white p-6 shadow-md flex flex-col items-center">

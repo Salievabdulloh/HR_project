@@ -5,29 +5,25 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useGetStore } from '../store/store';
 import { DataArray } from '@mui/icons-material';
 
-const Card = ({ text, price, grade }: any) => {
+const Card2 = ({ text, price, grade }: any) => {
 
-    const { getVacationSummary, vacation } = useGetStore()
+    const { payroll, getPayrollRecordTotal } = useGetStore()
 
-    const data = vacation?.data
+    const data = payroll?.data
 
-    // console.log(data);
+    const getMonth = data?.map(e => e?.month) || []
 
     let str = []
-    let cnt = 0
-    let cnt2 = 0
-    for (let i = 0; i <= data?.length; i++) {
-        str.push(0 + ', ')
+    for (const el of getMonth) {
+        console.log(str.push(el.slice(0, 3)));
+
     }
 
-    data?.map(e => cnt += e.totalVacationDays)
-    data?.map(e => cnt2 += e.employeesOnVacation)
+    console.log(getMonth)
+    console.log([str])
 
-    // console.log(cnt);
 
-    const month = ['January', 'February', 'March', 'April', 'May', "Juny", "July", "August", "Sep", 'September', 'October', 'November', 'December']
-
-    useEffect(() => { getVacationSummary() }, [])
+    useEffect(() => { getPayrollRecordTotal() }, [])
 
     return (
         <div className="rounded-[20px] bg-white p-5">
@@ -45,20 +41,15 @@ const Card = ({ text, price, grade }: any) => {
                     xAxis={[
                         {
                             scaleType: 'band',
-                            data: ['Jan', 'Tue', 'Wed', 'Thu', 'Fri', "Sat"],
+                            data: str || [1, 2, 3, 4],
                         },
                     ]}
                     series={[
                         {
                             label: 'Total Vacation Days',
-                            data: [cnt],
+                            data: [1, 2, 3],
                             color: '#EF4444',
-                        },
-                        {
-                            label: 'Employees on Vacation',
-                            data: [cnt2],
-                            color: '#3B82F6',
-                        },
+                        }
                     ]}
                     width={350}
                     height={250}
@@ -68,4 +59,4 @@ const Card = ({ text, price, grade }: any) => {
     )
 }
 
-export default Card
+export default Card2
