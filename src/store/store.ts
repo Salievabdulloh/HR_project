@@ -51,9 +51,25 @@ interface GetAllUsers {
     phoneNumber?: string
 }
 
-// interface getUserDepartment{
-
+// interface payrollById {
+//     id: number,
+//     periodStart?: string
+//     periodEnd?: string
+//     grossPay?: number
+//     deductions?: number
+//     netPay?: number
+//     createdAt?: string
+//     employeeId?: number
+//     employeeName?: string
 // }
+
+interface editMe {
+    employeeId: number
+    username: string
+    email: string
+    phoneNumber: string
+}
+
 interface GetStore {
     user: RegisterData[]
     allUsers: GetAllUsers[]
@@ -62,10 +78,11 @@ interface GetStore {
     department: []
     vacation: []
     payroll: []
-    addDialog: number,
-    setaddDialog: (value: number) => void
+    salary: []
+    payrollId: []
 
     getRegister: () => Promise<void>
+    getSalaryAnomoly: () => Promise<void>
     getPayrollRecordTotal: () => Promise<void>
     getUsersAll: () => Promise<void>
     getVacationSummary: () => Promise<void>
@@ -76,7 +93,9 @@ interface GetStore {
     deleteEmployee: (data: EmployeeDate) => Promise<void>
     editEmployee: (data: EmployeeDate) => Promise<void>
     getEmployeeId: (data: EmployeeByid) => Promise<void>
+    getPayrollRecordId: () => Promise<void>
     editUsers: (data: GetAllUsers) => Promise<void>
+    editUser: (data: RegisterData) => Promise<void>
 }
 
 export const useGetStore = create<GetStore>((set, get) => ({
@@ -87,10 +106,8 @@ export const useGetStore = create<GetStore>((set, get) => ({
     department: [],
     vacation: [],
     payroll: [],
-
-    addDialog: 1,
-
-    setaddDialog: (value) => set({ addDialog: value }),
+    payrollId: [],
+    salary: [],
 
     getRegister: async () => {
         try {
@@ -104,6 +121,22 @@ export const useGetStore = create<GetStore>((set, get) => ({
         try {
             let { data } = await api.get(`/departments/summary`)
             set(() => ({ department: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getSalaryAnomoly: async () => {
+        try {
+            let { data } = await api.get(`/salary_anomaly/get-list`)
+            set(() => ({ salary: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getPayrollRecordId: async () => {
+        try {
+            let { data } = await api.get(`/payroll_record/get-all`)
+            set(() => ({ payrollId: data }))
         } catch (error) {
             console.error(error)
         }
@@ -217,5 +250,4 @@ export const useGetStore = create<GetStore>((set, get) => ({
             console.error(error);
         }
     },
-
 }))

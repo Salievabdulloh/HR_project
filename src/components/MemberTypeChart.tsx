@@ -57,9 +57,9 @@ const MemberTypeChart = () => {
     useEffect(() => { getDepartment() }, [])
 
     return (
-        <div className="rounded-[20px] bg-white p-6 shadow-md flex flex-col items-center">
+        <div className="rounded-[20px] w-[475px] bg-white p-6 shadow-md flex flex-col items-center">
             <div className="flex justify-between items-center w-full mb-4">
-                <h2 className="font-medium text-[20px]">Member Type</h2>
+                <h2 className="font-medium text-[20px]">Department</h2>
                 <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700 text-sm">
                     <MoreHorizontal size={20} />
                     <SeeAll />

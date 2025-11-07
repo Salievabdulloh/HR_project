@@ -3,6 +3,7 @@ import { Button, Input } from "antd";
 import { useEffect, useState } from "react";
 import { useGetStore } from "@/src/store/store";
 import { Loader } from "lucide-react";
+import toast from "react-hot-toast";
 
 const Profile = () => {
     const { user, getRegister, editUser } = useGetStore();
@@ -39,27 +40,34 @@ const Profile = () => {
 
     async function saveProfile() {
         let edit = {
+            employeeId: userInfo?.id,
             username: editUsername,
             email: editemail,
             phoneNumber: editnumber,
         }
-        await editUser(edit)
+        let res = await editUser(edit)
+        // if (res) {
+        //     toast.success("Your profile has been updated")
+        // } else {
+        //     toast.error("Please check your internet connection")
+        // }
+        toast.success("Your profile has been updated")
     }
 
-    const [load, setLoad] = useState(false)
+    // const [load, setLoad] = useState(false)
 
-    // async function upload() {
-    //     try {
-    //         setLoad(true)
-    //         await saveProfile()
-    //     } catch (error) {
-    //         console.error(error);
-    //     } finally {
-    //         setTimeout(() => {
-    //             setLoad(false)
-    //         }, 2000)
-    //     }
-    // }
+    // // async function upload() {
+    // //     try {
+    // //         setLoad(true)
+    // //         await saveProfile()
+    // //     } catch (error) {
+    // //         console.error(error);
+    // //     } finally {
+    // //         setTimeout(() => {
+    // //             setLoad(false)
+    // //         }, 2000)
+    // //     }
+    // // }
 
     if (!user) {
         return <div className="flex items-center">Loading <Loader className="animate-spin" /></div>;
@@ -111,6 +119,7 @@ const Profile = () => {
                             <label htmlFor="first-name" className="text-sm font-medium text-gray-700">First Name</label>
                             <Input
                                 id="first-name"
+                                disabled
                                 value={editname}
                                 onChange={(e) => setEditname(e.target.value)}
                                 placeholder="First Name"
@@ -121,6 +130,7 @@ const Profile = () => {
                             <label htmlFor="last-name" className="text-sm font-medium text-gray-700">Last Name</label>
                             <Input
                                 id="last-name"
+                                disabled
                                 value={editLastName}
                                 onChange={(e) => setEditLastName(e.target.value)}
                                 placeholder="Last Name"
@@ -129,6 +139,7 @@ const Profile = () => {
                             <label htmlFor="position" className="text-sm font-medium text-gray-700">Position</label>
                             <Input
                                 id="position"
+                                disabled
                                 value={editPosition}
                                 onChange={(e) => setEditPosition(e.target.value)}
                                 placeholder="Position"
@@ -139,6 +150,7 @@ const Profile = () => {
                             <label htmlFor="hire-date" className="text-sm font-medium text-gray-700">Hire Date</label>
                             <Input
                                 id="hire-date"
+                                disabled
                                 value={editdate}
                                 onChange={(e) => setEditdate(e.target.value)}
                                 placeholder="Hire Date"
@@ -149,6 +161,7 @@ const Profile = () => {
                             <label htmlFor="base-salary" className="text-sm font-medium text-gray-700">Base Salary</label>
                             <Input
                                 id="base-salary"
+                                disabled
                                 value={editsalary}
                                 onChange={(e) => setEditsalary(e.target.value)}
                                 placeholder="Base Salary"
@@ -159,6 +172,7 @@ const Profile = () => {
                             <label htmlFor="department-name" className="text-sm font-medium text-gray-700">Department Name</label>
                             <Input
                                 id="department-name"
+                                disabled
                                 value={editDepartment}
                                 onChange={(e) => setEditDepartment(e.target.value)}
                                 placeholder="Department Name"

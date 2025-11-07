@@ -362,7 +362,6 @@ const Employee: React.FC = () => {
                                     required: true
                                 })}
                                 placeholder="Phone +992"
-                                maxLength={9}
                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.phone && <p className="text-red-500 text-sm">Phone is required</p>}
@@ -374,7 +373,6 @@ const Employee: React.FC = () => {
                                     required: true
                                 })}
                                 placeholder="BaseSalary"
-                                maxLength={9}
                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.baseSalary && <p className="text-red-500 text-sm">BaseSalary is required</p>}
@@ -422,7 +420,6 @@ const Employee: React.FC = () => {
                                     required: true
                                 })}
                                 placeholder="FirstName"
-                                maxLength={9}
                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.firstName && <p className="text-red-500 text-sm">FirstName is required</p>}
@@ -434,18 +431,15 @@ const Employee: React.FC = () => {
                                     required: true
                                 })}
                                 placeholder="LastName"
-                                maxLength={9}
                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.lastName && <p className="text-red-500 text-sm">LastName is required</p>}
                         </div>
-
                         <div className="relative">
                             <input
                                 type={openEye ? "text" : "password"}
                                 {...register("password", {
                                     validate: (value: string) => {
-                                        // If empty, return full requirement message
                                         if (!value || value.trim() === "") {
                                             return (
                                                 "Password is required. Requirements: " +
@@ -453,7 +447,6 @@ const Employee: React.FC = () => {
                                             );
                                         }
 
-                                        // Check each rule separately
                                         const missing: string[] = [];
                                         if (value.length < 8) missing.push("at least 8 characters");
                                         if (!/[A-Z]/.test(value)) missing.push("an uppercase letter (A–Z)");
@@ -462,15 +455,12 @@ const Employee: React.FC = () => {
                                         if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value))
                                             missing.push("a symbol (e.g. !@#$%)");
 
-                                        // If nothing missing -> valid
                                         if (missing.length === 0) return true;
 
-                                        // If exactly one missing -> return focused helpful message
                                         if (missing.length === 1) {
                                             return `Please include ${missing[0]} in your password.`;
                                         }
 
-                                        // If multiple missing -> return concise list of missing items
                                         return `Missing: ${missing.join(", ")}.`;
                                     },
                                 })}

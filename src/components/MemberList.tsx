@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SeeAll from "@/src/components/SeaAll"
 import { ArrowDownUp, Filter, MoreVertical, Download, Share2, Edit2, Trash2 } from "lucide-react";
 import Button from "@/src/components/Button"
@@ -9,55 +9,62 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useGetStore } from "../store/store";
 
-interface TableItem {
-    name: string;
-    date: string;
-    sale: string;
-    status: string;
-    status_class: "success" | "warning" | "danger" | "info";
-}
+// interface TableItem {
+//     name: string;
+//     date: string;
+//     sale: string;
+//     status: string;
+//     status_class: "success" | "warning" | "danger" | "info";
+// }
 
-const tableData: TableItem[] = [
-    {
-        name: "John Doe",
-        date: "2025-10-15",
-        sale: "$1,200",
-        status: "Completed",
-        status_class: "success",
-    },
-    {
-        name: "Jane Smith",
-        date: "2025-10-20",
-        sale: "$980",
-        status: "Pending",
-        status_class: "warning",
-    },
-    {
-        name: "Samuel Green",
-        date: "2025-10-25",
-        sale: "$1,560",
-        status: "Cancelled",
-        status_class: "danger",
-    },
-];
+// const tableData: TableItem[] = [
+//     {
+//         name: "John Doe",
+//         date: "2025-10-15",
+//         sale: "$1,200",
+//         status: "Completed",
+//         status_class: "success",
+//     },
+//     {
+//         name: "Jane Smith",
+//         date: "2025-10-20",
+//         sale: "$980",
+//         status: "Pending",
+//         status_class: "warning",
+//     },
+//     {
+//         name: "Samuel Green",
+//         date: "2025-10-25",
+//         sale: "$1,560",
+//         status: "Cancelled",
+//         status_class: "danger",
+//     },
+// ];
 
-const getStatusStyles = (status: TableItem["status_class"]) => {
-    switch (status) {
-        case "success":
-            return "bg-emerald-100 text-emerald-700";
-        case "warning":
-            return "bg-amber-100 text-amber-700";
-        case "danger":
-            return "bg-rose-100 text-rose-700";
-        default:
-            return "bg-blue-100 text-blue-700";
-    }
-};
+// const getStatusStyles = (status: TableItem["status_class"]) => {
+//     switch (status) {
+//         case "success":
+//             return "bg-emerald-100 text-emerald-700";
+//         case "warning":
+//             return "bg-amber-100 text-amber-700";
+//         case "danger":
+//             return "bg-rose-100 text-rose-700";
+//         default:
+//             return "bg-blue-100 text-blue-700";
+//     }
+// };
 
 const MemberList: React.FC = ({ search }: any) => {
 
-    const [sort, setSort] = useState('')
+    const { getSalaryAnomoly, salary } = useGetStore()
+
+    console.log(salary)
+
+    const data = salary?.data
+
+    useEffect(() => { getSalaryAnomoly() }, [])
 
     return (
         <div className="rounded-[20px] my-5 bg-white p-6 shadow-sm border border-gray-100">
@@ -65,12 +72,10 @@ const MemberList: React.FC = ({ search }: any) => {
                 <h2 className="font-semibold text-[22px] text-gray-800">List of Member</h2>
                 <div className="flex items-center gap-2">
                     <Button icon={<ArrowDownUp size={16} />} text="Sort" />
-                    {/* <button onChange={setSort}>Sort</button> */}
                     <Button icon={<Filter size={16} />} text="Filter" />
                     <SeeAll />
                 </div>
             </div>
-
             <div className="overflow-x-auto">
                 <table className="min-w-full border-collapse">
                     <thead>
@@ -83,25 +88,20 @@ const MemberList: React.FC = ({ search }: any) => {
                         </tr>
                     </thead>
                     <tbody className="text-gray-700 text-sm">
-                        {tableData
-                            .filter((e) => e.name.toLowerCase().includes(search.toLowerCase()))
-                            .sort((a, b) => a.name.localeCompare(b.name))
-                            .map((item, idx) => (
+                        {data
+                            // .filter((e) => e.name.toLowerCase().includes(search.toLowerCase()))
+                            // .sort((a, b) => a.name.localeCompare(b.name))
+                            ?.map((item, idx) => (
                                 <tr
                                     key={item.name}
-                                    className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                        } hover:bg-gray-100 transition`}
-                                >
-                                    <td className="py-3 px-4 font-medium">{item.name}</td>
-                                    <td className="py-3 px-4">{item.date}</td>
-                                    <td className="py-3 px-4">{item.sale}</td>
+                                    className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition`}>
+                                    <td className="py-3 px-4 font-medium">{item.fullName}</td>
+                                    <td className="py-3 px-4">{item.month.toLocaleString("en-US", { month: "short" })}</td>
+                                    <td className="py-3 px-4">{item.deviation.toFixed()}</td>
                                     <td className="py-3 px-4 text-center">
                                         <span
-                                            className={`text-xs font-medium px-3 py-1.5 rounded-full ${getStatusStyles(
-                                                item.status_class
-                                            )}`}
-                                        >
-                                            {item.status}
+                                            className={`text-xs font-medium px-3 py-1.5 rounded-full`}>
+                                            {item.isViewed ? "viewed" : "not viewed"}
                                         </span>
                                     </td>
                                     <td className="py-3 px-4 text-center">

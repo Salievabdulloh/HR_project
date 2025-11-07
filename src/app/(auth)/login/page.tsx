@@ -43,7 +43,7 @@ const Login = () => {
       console.log(getData)
 
       setIsSuccess(true)
-      router.push("/dashboard/employee")
+      router.push("/dashboard")
 
     } catch (error) {
       console.error(error);

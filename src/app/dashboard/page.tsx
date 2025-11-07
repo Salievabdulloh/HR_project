@@ -3,12 +3,12 @@ import { Widgets } from '@mui/icons-material'
 import { ArrowDown, ArrowDownUp, ArrowLeft, ArrowRight, Calendar, Filter, SearchIcon, Settings } from 'lucide-react'
 import React, { useState } from 'react'
 import SeeAll from "@/src/components/SeaAll"
-import Card from "@/src/components/Card"
+import Card from "@/src/components/Card2"
 import Button from "@/src/components/Button"
 import AvgWorkHoursChart from '@/src/components/AvgWorkHoursChart'
 import MemberTypeChart from '@/src/components/MemberTypeChart'
 import MemberList from '@/src/components/MemberList'
-import Card2 from '@/src/components/Card2'
+import Card2 from '@/src/components/Card'
 
 const Dashboard = () => {
 
@@ -58,31 +58,20 @@ const Dashboard = () => {
                     ))}
                 </div>
             </div>
-            <div className="flex gap-5">
-                <div className="flex gap-5 items-stretch flex-col">
+            <div className="flex mt-5 gap-5">
+                <div className="flex gap-5 flex-col">
                     <AvgWorkHoursChart />
                     <div className="">
                         <div className="flex gap-5">
                             <Card2 text='Total payroll' price='$34.4322' grade={'+24'} />
                             <Card text='Job Applicant' price='$12.845' grade={'-15'} />
                         </div>
-                        {/* <div className="rounded-[20px] my-5 bg-white p-5">
-                        <div className="flex items-center mb-4 justify-between">
-                            <h2 className='font-medium text-[20px]'>List of Member</h2>
-                            <div className="flex items-center gap-2">
-                                <Button icon={<ArrowDownUp size={16} />} text="Sort" />
-                                <Button icon={<Filter size={16} />} text="Filter" />
-                                <SeeAll />
-                            </div>
-                        </div>
-                        <div className=""></div>
-                    </div> */}
                         <MemberList search={search} />
                     </div>
                 </div>
                 <div className="flex gap-5 items-stretch flex-col">
                     <MemberTypeChart />
-                    <div className="rounded-[20px] ml-8 bg-white py-5">
+                    <div className="rounded-[20px] bg-white py-5">
                         <div className="px-5">
                             <div className="flex items-center mb-4 justify-between">
                                 <h2 className='font-medium text-[20px]'>Schedule</h2>

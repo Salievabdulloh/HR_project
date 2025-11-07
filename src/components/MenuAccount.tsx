@@ -96,11 +96,11 @@ export default function MenuAccount() {
                                         aria-labelledby="composition-button"
                                         onKeyDown={handleListKeyDown}
                                     >
-                                        <MenuItem onClick={handleClose}>
+                                        {/* <MenuItem onClick={handleClose}>
                                             <p className='font-semibold'>
                                                 {user?.username}
                                             </p>
-                                        </MenuItem>
+                                        </MenuItem> */}
                                         <Link href="/profile">
                                             <MenuItem onClick={handleClose}>Profile</MenuItem>
                                         </Link>

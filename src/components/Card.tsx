@@ -7,27 +7,29 @@ import { DataArray } from '@mui/icons-material';
 
 const Card = ({ text, price, grade }: any) => {
 
-    const { getVacationSummary, vacation } = useGetStore()
+    const { payroll, getPayrollRecordTotal } = useGetStore()
 
-    const data = vacation?.data
+    const data = payroll?.data
 
-    // console.log(data);
+    const getMonth = data?.map(e => e?.month) || []
+    const getTotal = data?.map(e => e?.totalNetPay) || []
 
     let str = []
-    let cnt = 0
-    let cnt2 = 0
-    for (let i = 0; i <= data?.length; i++) {
-        str.push(0 + ', ')
+
+    for (const el of getMonth) {
+        console.log(str.push(el.slice(0, 3)));
     }
 
-    data?.map(e => cnt += e.totalVacationDays)
-    data?.map(e => cnt2 += e.employeesOnVacation)
+    console.log(getMonth)
+    console.log(getTotal)
 
-    // console.log(cnt);
+    // const getMonthRev = str.toReversed()
+    // const getTotalRev = getTotal.toReversed()
+    // console.log(str)
+    // console.log(getMonthRev)
 
-    const month = ['January', 'February', 'March', 'April', 'May', "Juny", "July", "August", "Sep", 'September', 'October', 'November', 'December']
 
-    useEffect(() => { getVacationSummary() }, [])
+    useEffect(() => { getPayrollRecordTotal() }, [])
 
     return (
         <div className="rounded-[20px] bg-white p-5">
@@ -38,29 +40,24 @@ const Card = ({ text, price, grade }: any) => {
             <h1 className='text-[28px] my-2.5 font-medium'>{price}</h1>
             <div className='flex items-center gap-1'>
                 <p className={`${grade[0] === '+' ? "text-[hsl(120,100%,50%)]" : "text-[red]"}`}>{grade}%</p>
-                <p className='text-gray-500'>Vs Last Week</p>
+                <p className='text-gray-500'>Vs Last Six Months</p>
             </div>
-            <div className="-[-35pxml]">
+            <div className="m-4 ml-[-25px]">
                 <BarChart
                     xAxis={[
                         {
                             scaleType: 'band',
-                            data: ['Jan', 'Tue', 'Wed', 'Thu', 'Fri', "Sat"],
+                            data: str || [0, 0, 0, 0],
                         },
                     ]}
                     series={[
                         {
-                            label: 'Total Vacation Days',
-                            data: [cnt],
-                            color: '#EF4444',
-                        },
-                        {
-                            label: 'Employees on Vacation',
-                            data: [cnt2],
-                            color: '#3B82F6',
-                        },
+                            label: 'Total Net Pay',
+                            data: getTotal || [0, 0, 0, 0],
+                            color: 'green',
+                        }
                     ]}
-                    width={350}
+                    width={300}
                     height={250}
                 />
             </div>

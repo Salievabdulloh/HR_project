@@ -16,7 +16,8 @@ export default function BasicMenu({ employeeId, name, el }: any) {
 
     const router = useRouter()
 
-    const { user, registration, getRegister, getEmployee, deleteEmployee, editEmployee } = useGetStore()
+    const [id, setId] = React.useState(employeeId)
+    const { user, registration, getRegister, getEmployee, deleteEmployee, editEmployee, payrollId, getPayrollRecordId } = useGetStore()
     const [openModal, setopenModal] = React.useState(false)
     const [isDeleted, setIsDeleted] = React.useState(false)
 
@@ -24,10 +25,11 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     const [editfirstName, setEditfirstName] = React.useState('')
     const [editLastName, setEditLastName] = React.useState('')
     const [editposition, setEditposition] = React.useState('')
-    const [edithireDate, setEdithireDate] = React.useState('')
+    const [openPayroll, setopenPayroll] = React.useState(false)
     const [editbaseSalary, setEditbaseSalary] = React.useState<number>(0)
     const [editisActive, setEditisActive] = React.useState<boolean>(false)
     const [editdepartmentName, setEditdepartmentName] = React.useState<number>(1);
+    const [edithireDate, setEdithireDate] = React.useState('')
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -36,8 +38,6 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     const handleClose = () => {
         setAnchorEl(null);
     }
-
-    // console.log(employeeId);
 
     async function deleteUser() {
         try {
@@ -92,9 +92,11 @@ export default function BasicMenu({ employeeId, name, el }: any) {
         handleClose()
     }
 
+    const data = payrollId?.data
 
-    React.useEffect(() => { getEmployee(), getRegister() }, [])
+    console.log(data)
 
+    React.useEffect(() => { getEmployee(), getRegister(), getPayrollRecordId() }, [])
     return (
         <div>
             <Button
@@ -135,10 +137,11 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                         <p>Profile</p>
                     </div>
                 </MenuItem>
-                <MenuItem
-                // onClick={() => router.push(`/dashboard/${employeeId}`)}
-                >
-                    <div className="flex items-center gap-2">
+                <MenuItem>
+                    <div onClick={() => {
+                        handleClose()
+                        setopenPayroll(true)
+                    }} className="flex items-center gap-2">
                         <DollarSign />
                         <p>Payroll</p>
                     </div>
@@ -175,6 +178,42 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                         <Select.Option value={1}>IT Department</Select.Option>
                         <Select.Option value={2}>Sales Department</Select.Option>
                     </Select>
+                </div>
+            </Modal>
+            <Modal
+                title={`Payroll Details - ${name}`}
+                onCancel={() => setopenPayroll(false)}
+                open={openPayroll}
+                footer={null}>
+                <div className='overflow-y-auto max-h-[400px]'>
+                    {data?.some(e => e.employeeId == employeeId) ? (
+                        data
+                            .filter(e => e.employeeId == employeeId)
+                            .map(e => (
+                                <div
+                                    key={e.id}
+                                    className="border border-gray-200 rounded-xl p-5 mb-4 bg-gray-50 shadow-sm">
+                                    <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-600">
+                                        <p className="font-medium">Period Start:</p>
+                                        <p>{new Date(e.periodStart).toLocaleDateString()}</p>
+                                        <p className="font-medium">Period End:</p>
+                                        <p>{new Date(e.periodEnd).toLocaleDateString()}</p>
+                                        <p className="font-medium">Gross Pay:</p>
+                                        <p>${e.grossPay}</p>
+                                        <p className="font-medium">Deductions:</p>
+                                        <p>${e.deductions}</p>
+                                        <p className="font-medium text-green-600">Net Pay:</p>
+                                        <p className="text-green-600 font-semibold">${e.netPay}</p>
+                                        <p className="font-medium">Created At:</p>
+                                        <p>{new Date(e.createdAt).toLocaleString()}</p>
+                                    </div>
+                                </div>
+                            ))
+                    ) : (
+                        <div className="p-5 text-center text-gray-500">
+                            <p>There's no payroll record for this user.</p>
+                        </div>
+                    )}
                 </div>
             </Modal>
         </div >
