@@ -1,6 +1,7 @@
 'use client'
+import useDarkSide from '@/src/shared/config/useDarkSide'
 import { Wallet } from '@mui/icons-material'
-import { Calendar, CardSim, CircleSlash, Compass, File, FileSearch, FileText, HelpCircle, Layers, Settings, Users, WalletCards } from 'lucide-react'
+import { Briefcase, Calendar, CardSim, CircleSlash, Compass, File, FileSearch, FileText, HelpCircle, Layers, LucideBriefcaseBusiness, Settings, Users, WalletCards } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
@@ -14,6 +15,8 @@ const layout: React.FC<layoutProps> = ({ children }) => {
 
     const router = useRouter()
 
+    const [theme] = useDarkSide()
+
     const items = [
         {
             id: 1,
@@ -23,21 +26,21 @@ const layout: React.FC<layoutProps> = ({ children }) => {
         },
         {
             id: 2,
-            name: "Employee",
+            name: "Employees",
             icon: <Users />,
             path: "/dashboard/employee"
         },
         {
             id: 3,
-            name: "Recriutments",
-            icon: <FileSearch />,
-            path: "/dashboard/Employee"
+            name: "Departments",
+            icon: <LucideBriefcaseBusiness />,
+            path: "/dashboard/departments"
         },
         {
             id: 4,
             name: "Payroll",
             icon: <WalletCards />,
-            path: "/dashboard/Employee"
+            path: "/dashboard/payroll"
         },
         {
             id: 5,
@@ -99,7 +102,9 @@ const layout: React.FC<layoutProps> = ({ children }) => {
                     ))}
                 </div>
             </div>
-            <div className="w-full">
+            <div className={`w-full ${theme === 'dark'
+                ? 'bg-linear-to-t from-[#0a0a0f] via-[#0f172a] to-[#172554] text-gray-100'
+                : 'bg-linear-to-t from-blue-50 via-white to-blue-100 text-gray-900'}`}>
                 {children}
             </div>
         </div>

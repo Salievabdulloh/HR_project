@@ -17,7 +17,7 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     const router = useRouter()
 
     const [id, setId] = React.useState(employeeId)
-    const { user, registration, getRegister, getEmployee, deleteEmployee, editEmployee, payrollId, getPayrollRecordId } = useGetStore()
+    const { user, registration, getRegister, getEmployee, allDepartment, getAllDepartments, deleteEmployee, editEmployee, payrollData, getPayrollRecord } = useGetStore()
     const [openModal, setopenModal] = React.useState(false)
     const [isDeleted, setIsDeleted] = React.useState(false)
 
@@ -26,7 +26,6 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     const [editLastName, setEditLastName] = React.useState('')
     const [editposition, setEditposition] = React.useState('')
     const [openPayroll, setopenPayroll] = React.useState(false)
-    const [editbaseSalary, setEditbaseSalary] = React.useState<number>(0)
     const [editisActive, setEditisActive] = React.useState<boolean>(false)
     const [editdepartmentName, setEditdepartmentName] = React.useState<number>(1);
     const [edithireDate, setEdithireDate] = React.useState('')
@@ -62,7 +61,6 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                 lastName: editLastName,
                 position: editposition,
                 hireDate: edithireDate,
-                baseSalary: Number(editbaseSalary),
                 isActive: editisActive,
                 departmentId: Number(editdepartmentName),
             }
@@ -82,7 +80,6 @@ export default function BasicMenu({ employeeId, name, el }: any) {
         setEditLastName(el.lastName)
         setEditposition(el.position)
         setEdithireDate(el.hireDate)
-        setEditbaseSalary(el.baseSalary)
         setEditisActive(el.isActive ?? false)
         setEditdepartmentName(el.departmentName)
     }
@@ -92,11 +89,18 @@ export default function BasicMenu({ employeeId, name, el }: any) {
         handleClose()
     }
 
-    const data = payrollId?.data
+    const data = payrollData?.data
+
+    const dep = allDepartment?.data
 
     console.log(data)
 
-    React.useEffect(() => { getEmployee(), getRegister(), getPayrollRecordId() }, [])
+    React.useEffect(() => {
+        getEmployee()
+        getRegister()
+        getPayrollRecordId()
+        getAllDepartments()
+    }, [])
     return (
         <div>
             <Button
@@ -169,14 +173,14 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                         <Select.Option value="Senior">Senior</Select.Option>
                     </Select>
                     <Input placeholder='Edit hire Date' type="date" value={edithireDate} onChange={(e) => setEdithireDate(e.target.value)} />
-                    <Input placeholder='Edit baseSalary' type='number' value={editbaseSalary} onChange={(e) => setEditbaseSalary(Number(e.target.value))} />
                     <Select value={editisActive} onChange={(value: boolean) => setEditisActive(value)}>
                         <Select.Option value={true}>Active</Select.Option>
                         <Select.Option value={false}>Incative</Select.Option>
                     </Select>
                     <Select value={editdepartmentName} onChange={(value) => setEditdepartmentName(Number(value))}>
-                        <Select.Option value={1}>IT Department</Select.Option>
-                        <Select.Option value={2}>Sales Department</Select.Option>
+                        {dep?.map(e => (
+                            <Select.Option className="cursor-pointer" value={e.id}>{e.name}</Select.Option>
+                        ))}
                     </Select>
                 </div>
             </Modal>

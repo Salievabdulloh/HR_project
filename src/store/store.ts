@@ -63,11 +63,28 @@ interface GetAllUsers {
 //     employeeName?: string
 // }
 
-interface editMe {
+interface Department {
+    id: number,
+    name?: string,
+    description?: string
+}
+
+interface PayrollRecord {
+    id: number
+    periodStart: string
+    periodEnd: string
+    grossPay: number
+    deductions: number
+    netPay: number
+    createdAt: string
     employeeId: number
-    username: string
-    email: string
-    phoneNumber: string
+    employeeName: string
+}
+
+interface Month {
+    month: string
+    totalNetPay: number
+    totalGrossPay: number
 }
 
 interface GetStore {
@@ -80,8 +97,14 @@ interface GetStore {
     payroll: []
     salary: []
     payrollId: []
+    payrollData: PayrollRecord[]
+    payrollMonthId: Month[]
+    allDepartment: []
+    departmentEmployee: Department[]
 
     getRegister: () => Promise<void>
+    getAllDepartments: () => Promise<void>
+    getDepartmentEmployees: () => Promise<void>
     getSalaryAnomoly: () => Promise<void>
     getPayrollRecordTotal: () => Promise<void>
     getUsersAll: () => Promise<void>
@@ -93,9 +116,14 @@ interface GetStore {
     deleteEmployee: (data: EmployeeDate) => Promise<void>
     editEmployee: (data: EmployeeDate) => Promise<void>
     getEmployeeId: (data: EmployeeByid) => Promise<void>
-    getPayrollRecordId: () => Promise<void>
+    getPayrollRecordId: (data: PayrollRecord) => Promise<void>
+    getPayrollRecord: () => Promise<void>
     editUsers: (data: GetAllUsers) => Promise<void>
     editUser: (data: RegisterData) => Promise<void>
+    editDepartmentEmployees: (data: Department) => Promise<void>
+    deleteDepartmentEmployees: (data: Department) => Promise<void>
+    addDepartmentEmployees: (data: Department) => Promise<void>
+    getPayrollmonth: (data: Month) => Promise<void>
 }
 
 export const useGetStore = create<GetStore>((set, get) => ({
@@ -107,7 +135,11 @@ export const useGetStore = create<GetStore>((set, get) => ({
     vacation: [],
     payroll: [],
     payrollId: [],
+    payrollData: [],
+    payrollMonthId: [],
     salary: [],
+    allDepartment: [],
+    departmentEmployee: [],
 
     getRegister: async () => {
         try {
@@ -125,6 +157,46 @@ export const useGetStore = create<GetStore>((set, get) => ({
             console.error(error)
         }
     },
+    getAllDepartments: async () => {
+        try {
+            let { data } = await api.get(`/departments`)
+            set(() => ({ allDepartment: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getDepartmentEmployees: async () => {
+        try {
+            let { data } = await api.get(`/departments/with-employees`)
+            set(() => ({ departmentEmployee: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    addDepartmentEmployees: async (data) => {
+        try {
+            await api.post(`/departments`, data)
+            await get().getDepartmentEmployees()
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    editDepartmentEmployees: async (data) => {
+        try {
+            await api.put(`/departments/${data.id}`, data)
+            await get().getDepartmentEmployees()
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    deleteDepartmentEmployees: async (id) => {
+        try {
+            await api.delete(`/departments/${id}`)
+            await get().getDepartmentEmployees()
+        } catch (error) {
+            console.error(error)
+        }
+    },
     getSalaryAnomoly: async () => {
         try {
             let { data } = await api.get(`/salary_anomaly/get-list`)
@@ -133,10 +205,26 @@ export const useGetStore = create<GetStore>((set, get) => ({
             console.error(error)
         }
     },
-    getPayrollRecordId: async () => {
+    getPayrollRecordId: async (id) => {
+        try {
+            let { data } = await api.get(`/payroll_record/get/${id}`)
+            set(() => ({ payrollId: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getPayrollRecord: async () => {
         try {
             let { data } = await api.get(`/payroll_record/get-all`)
-            set(() => ({ payrollId: data }))
+            set(() => ({ payrollData: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getPayrollmonth: async (id) => {
+        try {
+            let { data } = await api.get(`/payroll_record/get-graph?monthsRange=${id}`)
+            set(() => ({ payrollMonthId: data }))
         } catch (error) {
             console.error(error)
         }

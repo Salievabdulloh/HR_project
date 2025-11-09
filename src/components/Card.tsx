@@ -1,68 +1,94 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import SeeAll from "@/src/components/SeaAll"
+'use client';
+import React, { useEffect } from 'react';
+import SeeAll from "@/src/components/SeaAll";
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useGetStore } from '../store/store';
-import { DataArray } from '@mui/icons-material';
+import useDarkSide from '../shared/config/useDarkSide';
 
 const Card = ({ text, price, grade }: any) => {
+    const { payroll, getPayrollRecordTotal } = useGetStore();
+    const [theme] = useDarkSide();
 
-    const { payroll, getPayrollRecordTotal } = useGetStore()
+    const data = payroll?.data || [];
+    const months = data.map((e: any) => e.month?.slice(0, 3)) || [];
+    const totals = data.map((e: any) => e.totalNetPay) || [];
 
-    const data = payroll?.data
-
-    const getMonth = data?.map(e => e?.month) || []
-    const getTotal = data?.map(e => e?.totalNetPay) || []
-
-    let str = []
-
-    for (const el of getMonth) {
-        console.log(str.push(el.slice(0, 3)));
-    }
-
-    console.log(getMonth)
-    console.log(getTotal)
-
-    // const getMonthRev = str.toReversed()
-    // const getTotalRev = getTotal.toReversed()
-    // console.log(str)
-    // console.log(getMonthRev)
-
-
-    useEffect(() => { getPayrollRecordTotal() }, [])
+    useEffect(() => { getPayrollRecordTotal(); }, []);
 
     return (
-        <div className="rounded-[20px] bg-white p-5">
+        <div
+            className={`rounded-[20px] p-5 transition-all duration-500 shadow-md 
+        ${theme === 'dark'
+                    ? 'bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white'
+                    : 'bg-white text-gray-900 shadow-sm border border-gray-100'}
+      `}
+        >
+            {/* Header */}
             <div className="flex justify-between items-center">
-                <h2 className='font-medium text-[20px]'>{text}</h2>
+                <h2 className="font-medium text-[20px]">{text}</h2>
                 <SeeAll />
             </div>
-            <h1 className='text-[28px] my-2.5 font-medium'>{price}</h1>
-            <div className='flex items-center gap-1'>
-                <p className={`${grade[0] === '+' ? "text-[hsl(120,100%,50%)]" : "text-[red]"}`}>{grade}%</p>
-                <p className='text-gray-500'>Vs Last Six Months</p>
+
+            {/* Main content */}
+            <h1 className="text-[28px] my-2.5 font-semibold">{price}</h1>
+            <div className="flex items-center gap-1">
+                <p
+                    className={`font-medium ${grade[0] === '+' ? 'text-green-400' : 'text-red-400'
+                        }`}
+                >
+                    {grade}%
+                </p>
+                <p
+                    className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                        } text-sm`}
+                >
+                    Vs Last Six Months
+                </p>
             </div>
+
+            {/* Chart */}
             <div className="m-4 ml-[-25px]">
                 <BarChart
                     xAxis={[
                         {
                             scaleType: 'band',
-                            data: str || [0, 0, 0, 0],
+                            data: months.length ? months : ['---', '---', '---'],
+                            labelStyle: {
+                                fill: theme === 'dark' ? '#cbd5e1' : '#475569', // light blue-gray text
+                            },
+                            tickLabelStyle: {
+                                fill: theme === 'dark' ? '#e2e8f0' : '#1e293b',
+                            },
                         },
                     ]}
                     series={[
                         {
                             label: 'Total Net Pay',
-                            data: getTotal || [0, 0, 0, 0],
-                            color: 'green',
-                        }
+                            data: totals.length ? totals : [0, 0, 0],
+                            color: theme === 'dark' ? '#38bdf8' : '#22c55e',
+                        },
                     ]}
+                    yAxis={[
+                        {
+                            tickLabelStyle: {
+                                fill: theme === 'dark' ? '#e2e8f0' : '#1e293b',
+                            },
+                        },
+                    ]}
+                    sx={{
+                        '& .MuiChartsAxis-tickLabel': {
+                            fill: theme === 'dark' ? '#e2e8f0' : '#1e293b',
+                        },
+                        '& .MuiChartsAxis-line, & .MuiChartsAxis-tick': {
+                            stroke: theme === 'dark' ? '#334155' : '#cbd5e1',
+                        },
+                    }}
                     width={300}
                     height={250}
                 />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Card
+export default Card;

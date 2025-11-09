@@ -9,6 +9,7 @@ import AvgWorkHoursChart from '@/src/components/AvgWorkHoursChart'
 import MemberTypeChart from '@/src/components/MemberTypeChart'
 import MemberList from '@/src/components/MemberList'
 import Card2 from '@/src/components/Card'
+import useDarkSide from '@/src/shared/config/useDarkSide'
 
 const Dashboard = () => {
 
@@ -44,14 +45,16 @@ const Dashboard = () => {
 
     const [search, setSearch] = useState("")
 
+    const [theme] = useDarkSide()
+
     return (
-        <div className='bg-[hsl(199,90%,97%)] p-5 px-[25px]'>
+        <div className='p-5 px-[25px]'>
             <div className="flex justify-between relative items-center">
-                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" className='pl-10 w-[300px] py-2 rounded-md bg-white flex items-center gap-1.5 border-[#c2c0c0] shadow border' />
+                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" className={`pl-10 w-[300px] py-2 rounded-md ${theme === 'dark' ? "bg-[#0f172a]" : "bg-white"} flex items-center gap-1.5 border-[#c2c0c0] shadow border`} />
                 <SearchIcon className='left-2 absolute' size={20} />
                 <div className="flex items-center gap-5">
                     {buttons.map(e => (
-                        <button key={e.id} className='px-3 py-2 rounded-md bg-white flex items-center gap-1.5 cursor-pointer border-[#c2c0c0] shadow border'>
+                        <button key={e.id} className={`px-3 py-2 rounded-md ${theme === 'dark' ? "bg-[#0f172a]" : "bg-white"} flex items-center gap-1.5 cursor-pointer border-[#c2c0c0] shadow border`}>
                             {e.icon}
                             {e.buttonName}
                         </button>
@@ -71,13 +74,13 @@ const Dashboard = () => {
                 </div>
                 <div className="flex gap-5 items-stretch flex-col">
                     <MemberTypeChart />
-                    <div className="rounded-[20px] bg-white py-5">
+                    <div className={`rounded-[20px] ${theme === 'dark' ? "bg-[#0f172a]" : "bg-[#ffffff]"} py-5`}>
                         <div className="px-5">
                             <div className="flex items-center mb-4 justify-between">
                                 <h2 className='font-medium text-[20px]'>Schedule</h2>
                                 <SeeAll />
                             </div>
-                            <div className="flex items-center bg-[hsl(0,0%,95%)] rounded-lg  p-1 m-4 justify-between">
+                            <div className={`flex items-center ${theme === 'dark' ? "bg-[#171d2b]" : "bg-[hsl(0,0%,95%)]"} rounded-lg  p-1 m-4 justify-between`}>
                                 <Button icon={<ArrowLeft size={16} />} />
                                 <p>10 Nov 2025</p>
                                 <Button icon={<ArrowRight size={16} />} />

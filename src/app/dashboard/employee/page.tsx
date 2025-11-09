@@ -1,6 +1,4 @@
-// export default Employee
-
-"use client";
+"use client"
 import { Bell, DollarSign, Filter, Info, Loader, UserCircle2, WifiOff, Grid, List, EyeOff, Eye } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Button from "@/src/components/Button";
@@ -15,8 +13,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { error } from "console";
+import useDarkSide from "@/src/shared/config/useDarkSide";
 
 const Employee: React.FC = () => {
+
     const {
         register,
         watch,
@@ -29,7 +29,6 @@ const Employee: React.FC = () => {
             phone: "909090909",
             password: "pleaseLetmein.7",
             confirmPassword: "pleaseLetmein.7",
-            baseSalary: '2000',
             position: 'Junior',
             departmentId: 0,
             userRole: 'Employee',
@@ -38,7 +37,7 @@ const Employee: React.FC = () => {
         }
     })
 
-    const { employee, getEmployee, registration, getRegister, user: getUser, getUsers, allUsers } = useGetStore();
+    const { employee, getEmployee, registration, getRegister, user: getUser, getUsers, allDepartment, getAllDepartments, allUsers } = useGetStore();
 
     const [search, setSearch] = useState("");
     const [addDialog, setaddDialog] = useState(false);
@@ -54,22 +53,48 @@ const Employee: React.FC = () => {
     const user = employee?.data;
     const router = useRouter()
     console.log(allUsers);
+    const [theme] = useDarkSide()
 
 
-    const SkeletonRow = () => (
+    const SkeletonRow = ({ theme }: { theme: string }) => (
         <Stack direction="column" className="p-3">
             <Stack direction="row" spacing={2} alignItems="center" className="p-3">
-                <Skeleton variant="circular" width={60} height={60} />
+                <Skeleton
+                    variant="circular"
+                    width={60}
+                    height={60}
+                    className={`${theme === "dark"
+                        ? "bg-linear-to-r! from-gray-700 via-gray-800 to-gray-700"
+                        : "bg-linear-to-r! from-gray-200 via-gray-100 to-gray-200"
+                        }`}
+                />
             </Stack>
+
             <Stack spacing={0.5} flex={1}>
-                <Skeleton variant="text" width="40%" height={14} />
-                <Skeleton variant="text" width="40%" height={12} />
+                <Skeleton
+                    variant="text"
+                    width="40%"
+                    height={14}
+                    className={`${theme === "dark" ? "bg-gray-700!" : "bg-gray-200!"}`}
+                />
+                <Skeleton
+                    variant="text"
+                    width="40%"
+                    height={12}
+                    className={`${theme === "dark" ? "bg-gray-700!" : "bg-gray-200!"}`}
+                />
             </Stack>
+
             <Stack spacing={0.5} flex={1}>
-                <Skeleton variant="text" width="70%" height={100} />
+                <Skeleton
+                    variant="rectangular"
+                    width="70%"
+                    height={100}
+                    className={`${theme === "dark" ? "bg-gray-700!" : "bg-gray-200!"}`}
+                />
             </Stack>
         </Stack>
-    );
+    )
 
     async function addEmployee(data: any) {
         try {
@@ -120,7 +145,7 @@ const Employee: React.FC = () => {
 
     const itemTransition = { type: "spring", stiffness: 400, damping: 30 }
 
-    console.log();
+    const dep = allDepartment?.data
 
 
     useEffect(() => {
@@ -149,11 +174,18 @@ const Employee: React.FC = () => {
     useEffect(() => {
         getEmployee();
         getRegister();
+        getAllDepartments();
     }, []);
 
     return (
-        <div className="p-5">
-            <div className="fixed w-[80%] bg-[white] z-10">
+        <div
+            className={`min-h-screen py-10 px-5 md:px-20 transition-all duration-500 ${theme === 'dark'
+                ? 'bg-linear-to-t from-[#0a0a0f] via-[#0f172a] to-[#172554] text-gray-100'
+                : 'bg-linear-to-t from-blue-50 via-white to-blue-100 text-gray-900'}`}>
+            <div className={`${theme === 'dark'
+                ? 'bg-inherit text-gray-100'
+                : 'bg-inherit text-gray-900'
+                } border-b z-10`}>
                 <div className="py-5 flex border-b justify-between border-gray-200 items-center">
                     <Input
                         placeholder="Search employees..."
@@ -162,25 +194,44 @@ const Employee: React.FC = () => {
                         className="mr-4 max-w-[50%]"
                     />
                     <div className="flex items-center gap-3">
-                        <button className="rounded-full border border-gray-300 text-gray-600 p-2"><Info /></button>
-                        <button className="rounded-full border border-gray-300 text-gray-600 p-2"><Bell /></button>
-
-                        <div className="flex items-center gap-2 ml-2">
+                        <div className="flex items-center gap-2 ml-2 transition-all duration-300">
+                            {/* Card View Button */}
                             <button
                                 onClick={() => setViewMode("cards")}
-                                className={`flex items-center gap-2 px-3 py-2 rounded-md ${viewMode === "cards" ? "bg-white shadow" : "bg-white/60 hover:bg-white"}`}
+                                className={`
+      flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium
+      transition-all duration-300 border
+      ${theme === 'dark'
+                                        ? viewMode === "cards"
+                                            ? "bg-linear-to-r from-blue-700 to-blue-900 text-white shadow-md border-blue-800"
+                                            : "bg-[#1e293b] hover:bg-[#334155] text-gray-300 border-[#334155]"
+                                        : viewMode === "cards"
+                                            ? "bg-white text-blue-600 shadow-md border-gray-200"
+                                            : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200"
+                                    }
+    `}
                                 aria-pressed={viewMode === "cards"}
                                 title="Card view"
                             >
-                                <Grid size={16} /> Cards
+                                <Grid size={16} />
+                                Cards
                             </button>
                             <button
                                 onClick={() => setViewMode("table")}
-                                className={`flex items-center gap-2 px-3 py-2 rounded-md ${viewMode === "table" ? "bg-white shadow" : "bg-white/60 hover:bg-white"}`}
+                                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-mediumtransition-all duration-300 border ${theme === 'dark'
+                                    ? viewMode === "table"
+                                        ? "bg-linear-to-r from-blue-700 to-blue-900 text-white shadow-md border-blue-800"
+                                        : "bg-[#1e293b] hover:bg-[#334155] text-gray-300 border-[#334155]"
+                                    : viewMode === "table"
+                                        ? "bg-white text-blue-600 shadow-md border-gray-200"
+                                        : "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200"
+                                    }
+    `}
                                 aria-pressed={viewMode === "table"}
                                 title="Table view"
                             >
-                                <List size={16} /> Table
+                                <List size={16} />
+                                Table
                             </button>
                         </div>
 
@@ -222,7 +273,10 @@ const Employee: React.FC = () => {
                                     <motion.div
                                         layoutId={`employee-${e.id}`}
                                         key={e.id}
-                                        className="rounded-[10px] p-5 bg-[#f7fbff] hover:shadow-lg cursor-pointer"
+                                        className={`rounded-[10px] p-5 ${theme === 'dark'
+                                            ? 'bg-[#0f172a] text-gray-100'
+                                            : 'bg-linear-to-br bg-white text-gray-900'
+                                            } hover:shadow-lg cursor-pointer`}
                                         initial={{ opacity: 0, scale: 0.98 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.98 }}
@@ -230,7 +284,6 @@ const Employee: React.FC = () => {
                                     >
                                         <div className="flex items-start justify-between">
                                             <div className="flex flex-col items-start gap-3">
-
                                                 <div className="relative group">
                                                     <div
                                                         className="flex cursor-pointer flex-col gap-2">
@@ -240,7 +293,8 @@ const Employee: React.FC = () => {
                                                                 }`}
                                                         ></span>
                                                         <div className="absolute left-14 top-8 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300">
-                                                            <div className="bg-gray-900 text-white text-xs px-2.5 w-[85px] py-1 rounded-md shadow-lg">
+                                                            <div className={`${theme === 'dark' ? "bg-gray-400 text-[black]" : "bg-gray-900 text-white"} 
+                                                            text-xs px-2.5 w-[85px] py-1 rounded-md shadow-lg`}>
                                                                 {e.isActive ? "🟢 Active" : "🔴 Inactive"}
                                                             </div>
                                                         </div>
@@ -259,82 +313,115 @@ const Employee: React.FC = () => {
                                             </div>
                                         </div>
 
-                                        <div className="bg-white mt-5 text-sm p-3 rounded-xl">
+                                        <div className={`${theme === 'dark'
+                                            ? 'bg-[#1f242d] text-gray-100'
+                                            : 'bg-linear-to-br bg-white text-gray-900'
+                                            } mt-5 text-sm p-3 rounded-xl`}>
                                             <div className="flex text-gray-500 font-medium justify-between">
                                                 <h3>Department</h3>
                                                 <h3>Hired Date</h3>
                                             </div>
-                                            <div className="flex text-[hsl(240,100%,19%)] mb-4 mt-3 font-semibold justify-between">
+                                            <div className={`flex ${theme == 'dark' ? "text-[hsl(240,100%,79%)]" : "text-[hsl(240,100%,19%)]"} mb-4 mt-3 font-semibold justify-between`}>
                                                 <h3>{e.departmentName}</h3>
                                                 <h3>{String(e.hireDate).split("-").join("/")}</h3>
-                                            </div>
-                                            <div className="flex items-center gap-4">
-                                                <DollarSign />
-                                                <h3>{e.baseSalary}</h3>
                                             </div>
                                         </div>
                                     </motion.div>
                                 ))
                             )}
                         </motion.div>
-                    ) : (
-                        <motion.div
-                            key="table"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}>
-                            <div className="overflow-x-auto rounded-md border border-gray-100 bg-white shadow-sm">
-                                <table className="min-w-full">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th className="text-left px-4 py-3">Name</th>
-                                            <th className="text-left px-4 py-3">Position</th>
-                                            <th className="text-left px-4 py-3">Department</th>
-                                            <th className="text-left px-4 py-3">Hire Date</th>
-                                            <th className="text-left px-4 py-3">Salary</th>
-                                            <th className="text-center px-4 py-3">Status</th>
-                                            <th className="text-center px-4 py-3">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <motion.tbody layout initial={false} animate={{}}>
-                                        {filtered.map((e: any, idx: number) => (
-                                            <motion.tr
-                                                layoutId={`employee-${e.id}`} // same id as card item => framer will animate between layouts
-                                                key={e.id}
-                                                transition={itemTransition}
-                                                className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100`}
-                                            >
-                                                <td className="px-4 py-3">
-                                                    <div className="flex items-center gap-3">
-                                                        <UserCircle2 size={36} />
-                                                        <div>
-                                                            <div className="font-semibold">{e.firstName} {e.lastName}</div>
-                                                            <div className="text-xs text-gray-500">{e.email}</div>
+                    ) : (<motion.div
+                        key="table"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <div
+                            className={`overflow-x-auto rounded-md border shadow-sm transition-all duration-300 ${theme === 'dark'
+                                ? 'bg-[#0f172a] text-gray-100 border-gray-700'
+                                : 'bg-white text-gray-900 border-gray-200'
+                                }`}
+                        >
+                            <table className="min-w-full">
+                                <thead
+                                    className={`${theme === 'dark'
+                                        ? 'bg-[#1e293b] text-gray-200 border-b border-gray-700'
+                                        : 'bg-gray-50 text-gray-700 border-b border-gray-200'
+                                        }`}
+                                >
+                                    <tr>
+                                        <th className="text-left px-4 py-3 font-semibold">Name</th>
+                                        <th className="text-left px-4 py-3 font-semibold">Position</th>
+                                        <th className="text-left px-4 py-3 font-semibold">Department</th>
+                                        <th className="text-left px-4 py-3 font-semibold">Hire Date</th>
+                                        <th className="text-center px-4 py-3 font-semibold">Status</th>
+                                        <th className="text-center px-4 py-3 font-semibold">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <motion.tbody layout initial={false}>
+                                    {filtered.map((e: any, idx: number) => (
+                                        <motion.tr
+                                            layoutId={`employee-${e.id}`}
+                                            key={e.id}
+                                            transition={itemTransition}
+                                            className={`
+              transition-all duration-200
+              ${theme === 'dark' ? idx % 2 === 0
+                                                    ? 'bg-[#1e293b] hover:bg-[#334155]'
+                                                    : 'bg-[#0f172a] hover:bg-[#1e293b]'
+                                                    : idx % 2 === 0
+                                                        ? 'bg-white hover:bg-gray-100'
+                                                        : 'bg-gray-50 hover:bg-gray-100'
+                                                }
+            `}
+                                        >
+                                            <td className="px-4 py-3">
+                                                <div className="flex items-center gap-3">
+                                                    <UserCircle2 size={36} className={`${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`} />
+                                                    <div>
+                                                        <div className="font-semibold">{e.firstName} {e.lastName}</div>
+                                                        <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                            {e.email}
                                                         </div>
                                                     </div>
-                                                </td>
-                                                <td className="px-4 py-3">{e.position}</td>
-                                                <td className="px-4 py-3">{e.departmentName}</td>
-                                                <td className="px-4 py-3">{String(e.hireDate).split("-").join("/")}</td>
-                                                <td className="px-4 py-3">{e.baseSalary}</td>
-                                                <td className="px-4 py-3 text-center">
-                                                    <span className={`text-xs font-medium px-3 py-1.5 rounded-full ${e.isActive ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
-                                                        {e.isActive ? "Active" : "Inactive"}
-                                                    </span>
-                                                </td>
-                                                <td className="px-4 py-3 text-center">
-                                                    <BasicMenu name={e.firstName} employeeId={e.id} el={e} />
-                                                </td>
-                                            </motion.tr>
-                                        ))}
-                                    </motion.tbody>
-                                </table>
-                            </div>
-                        </motion.div>
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3">{e.position}</td>
+                                            <td className="px-4 py-3">{e.departmentName}</td>
+                                            <td className="px-4 py-3">{String(e.hireDate).split("-").join("/")}</td>
+                                            <td className="px-4 py-3 text-center">
+                                                <span
+                                                    className={`text-xs font-medium px-3 py-1.5 rounded-full ${e.isActive
+                                                        ? theme === 'dark'
+                                                            ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-700/50'
+                                                            : 'bg-emerald-100 text-emerald-700'
+                                                        : theme === 'dark'
+                                                            ? 'bg-rose-900/30 text-rose-400 border border-rose-700/50'
+                                                            : 'bg-rose-100 text-rose-700'
+                                                        }`}
+                                                >
+                                                    {e.isActive ? "Active" : "Inactive"}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-center">
+                                                <BasicMenu name={e.firstName} employeeId={e.id} el={e} />
+                                            </td>
+                                        </motion.tr>
+                                    ))}
+                                </motion.tbody>
+                            </table>
+                        </div>
+                    </motion.div>
                     )}
                 </AnimatePresence>
             </div>
-            <Modal title="add Modal" onCancel={() => setaddDialog(false)} onOk={addEmployee} open={addDialog}>
+            <Modal
+                title="add Modal"
+                footer={null}
+                onCancel={() => setaddDialog(false)}
+                // onOk={addEmployee}
+                open={addDialog}>
                 <form onSubmit={handleSubmit(addEmployee)} className="">
                     <div>
                         <input
@@ -367,25 +454,14 @@ const Employee: React.FC = () => {
                             {errors.phone && <p className="text-red-500 text-sm">Phone is required</p>}
                         </div>
                         <div>
-                            <input
-                                type="number"
-                                {...register("baseSalary", {
-                                    required: true
-                                })}
-                                placeholder="BaseSalary"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-                            />
-                            {errors.baseSalary && <p className="text-red-500 text-sm">BaseSalary is required</p>}
-                        </div>
-                        <div>
                             <select
                                 {...register("departmentId", {
                                     required: true
                                 })}
                                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
-                                {/* <option value="">None</option> */}
-                                <option value="1">IT Department</option>
-                                <option value="2">Sales Department</option>
+                                {dep?.map(e => (
+                                    <option className="cursor-pointer" value={e.id}>{e.name}</option>
+                                ))}
                             </select>
                             {errors.departmentId && <p className="text-red-500 text-sm">DepartmentId is required</p>}
                         </div>
@@ -498,7 +574,7 @@ const Employee: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                        <div className="relative mt-4">
+                        <div className="relative">
                             <input
                                 type={openEye2 ? "text" : "password"}
                                 {...register("confirmPassword", {
@@ -523,12 +599,13 @@ const Employee: React.FC = () => {
                                 <p className="mt-2 text-sm text-red-600">{errors.confirmPassword.message}</p>
                             )}
                         </div>
-
                     </div>
-                    <button type="submit"></button>
+                    <div className="flex mt-3 justify-end">
+                        <button className="bg-[blue] rounded px-4 py-1 cursor-pointer text-white" type="submit">Save</button>
+                    </div>
                 </form>
             </Modal>
-        </div>
+        </div >
     );
 };
 

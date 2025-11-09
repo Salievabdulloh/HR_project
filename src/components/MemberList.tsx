@@ -10,6 +10,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useGetStore } from "../store/store";
+import useDarkSide from "../shared/config/useDarkSide";
 
 // interface TableItem {
 //     name: string;
@@ -60,16 +61,18 @@ const MemberList: React.FC = ({ search }: any) => {
 
     const { getSalaryAnomoly, salary } = useGetStore()
 
-    console.log(salary)
+    // console.log(salary)
 
     const data = salary?.data
+
+    const [theme] = useDarkSide()
 
     useEffect(() => { getSalaryAnomoly() }, [])
 
     return (
-        <div className="rounded-[20px] my-5 bg-white p-6 shadow-sm border border-gray-100">
+        <div className={`rounded-[20px] my-5 ${theme === 'dark' ? "bg-[#0f172a]" : "bg-white"} p-6 shadow-sm border`}>
             <div className="flex items-center mb-6 justify-between">
-                <h2 className="font-semibold text-[22px] text-gray-800">List of Member</h2>
+                <h2 className={`font-semibold text-[22px] ${theme === 'dark' ? "text-gray-300" : " text-gray-800"}`}>List of Member</h2>
                 <div className="flex items-center gap-2">
                     <Button icon={<ArrowDownUp size={16} />} text="Sort" />
                     <Button icon={<Filter size={16} />} text="Filter" />
@@ -79,23 +82,39 @@ const MemberList: React.FC = ({ search }: any) => {
             <div className="overflow-x-auto">
                 <table className="min-w-full border-collapse">
                     <thead>
-                        <tr className="bg-gray-50 text-gray-600 text-sm">
-                            <th className="text-left py-3 px-4 font-medium">Name</th>
-                            <th className="text-left py-3 px-4 font-medium">Date</th>
-                            <th className="text-left py-3 px-4 font-medium">Sale</th>
-                            <th className="text-center py-3 px-4 font-medium">Status</th>
-                            <th className="text-center py-3 px-4 font-medium">Action</th>
+                        <tr
+                            className={`text-sm font-medium${theme === 'dark'
+                                    ? 'bg-[#181f2b] text-gray-200 border-b border-gray-700'
+                                    : 'bg-gray-50 text-gray-700 border-b border-gray-200'
+                                }`}>
+                            <th className="text-left py-3 px-4">Name</th>
+                            <th className="text-left py-3 px-4">Date</th>
+                            <th className="text-left py-3 px-4">Sale</th>
+                            <th className="text-center py-3 px-4">Status</th>
+                            <th className="text-center py-3 px-4">Action</th>
                         </tr>
+
                     </thead>
-                    <tbody className="text-gray-700 text-sm">
+                    <tbody className={`${theme == 'dark' ? "text-gray-400" : "text-gray-700"} text-sm`}>
                         {data
                             // .filter((e) => e.name.toLowerCase().includes(search.toLowerCase()))
                             // .sort((a, b) => a.name.localeCompare(b.name))
                             ?.map((item, idx) => (
                                 <tr
                                     key={item.name}
-                                    className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition`}>
-                                    <td className="py-3 px-4 font-medium">{item.fullName}</td>
+                                    className={`
+                                    ${idx % 2 === 0
+                                            ? theme === 'dark'
+                                                ? 'bg-[#0f172a]'
+                                                : 'bg-white'
+                                            : theme === 'dark'
+                                                ? 'bg-[hsl(222,47%,21%)]'
+                                                : 'bg-gray-50'
+                                        }
+                                    transition-colors duration-200
+                                    ${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}
+                                    `}>
+                                    <td className="py-3 px-4 font-medium" > {item.fullName}</td>
                                     <td className="py-3 px-4">{item.month.toLocaleString("en-US", { month: "short" })}</td>
                                     <td className="py-3 px-4">{item.deviation.toFixed()}</td>
                                     <td className="py-3 px-4 text-center">
@@ -107,7 +126,7 @@ const MemberList: React.FC = ({ search }: any) => {
                                     <td className="py-3 px-4 text-center">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                                <button className="p-2 rounded-lg hover:bg-gray-100 transition">
+                                                <button className={`p-2 rounded-lg ${theme === 'dark' ? 'hover:bg-gray-900' : 'hover:bg-gray-150'} transition`}>
                                                     <MoreVertical size={18} className="text-gray-500" />
                                                 </button>
                                             </DropdownMenuTrigger>
@@ -131,8 +150,8 @@ const MemberList: React.FC = ({ search }: any) => {
                             ))}
                     </tbody>
                 </table>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 
