@@ -96,6 +96,7 @@ interface GetStore {
     vacation: []
     payroll: []
     salary: []
+    payments: []
     payrollId: []
     payrollData: PayrollRecord[]
     payrollMonthId: Month[]
@@ -124,6 +125,7 @@ interface GetStore {
     deleteDepartmentEmployees: (data: Department) => Promise<void>
     addDepartmentEmployees: (data: Department) => Promise<void>
     getPayrollmonth: (data: Month) => Promise<void>
+    getPayments: () => Promise<void>
 }
 
 export const useGetStore = create<GetStore>((set, get) => ({
@@ -138,6 +140,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     payrollData: [],
     payrollMonthId: [],
     salary: [],
+    payments: [],
     allDepartment: [],
     departmentEmployee: [],
 
@@ -209,6 +212,14 @@ export const useGetStore = create<GetStore>((set, get) => ({
         try {
             let { data } = await api.get(`/payroll_record/get/${id}`)
             set(() => ({ payrollId: data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getPayments: async () => {
+        try {
+            let { data } = await api.get(`/departments/payments`)
+            set(() => ({ payments: data }))
         } catch (error) {
             console.error(error)
         }

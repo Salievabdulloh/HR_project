@@ -1,7 +1,7 @@
 'use client'
 import useDarkSide from '@/src/shared/config/useDarkSide'
 import { Wallet } from '@mui/icons-material'
-import { Briefcase, Calendar, CardSim, CircleSlash, Compass, File, FileSearch, FileText, HelpCircle, Layers, LucideBriefcaseBusiness, Settings, Users, WalletCards } from 'lucide-react'
+import { Briefcase, Calendar, CardSim, CircleSlash, Compass, DollarSign, File, FileSearch, FileText, HelpCircle, Layers, LucideBriefcaseBusiness, Settings, Users, WalletCards } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
@@ -44,9 +44,9 @@ const layout: React.FC<layoutProps> = ({ children }) => {
         },
         {
             id: 5,
-            name: "Schedule",
-            icon: <Calendar />,
-            path: "/dashboard/Employee"
+            name: "Payments",
+            icon: <DollarSign />,
+            path: "/dashboard/payment"
         },
     ]
 

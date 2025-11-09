@@ -98,7 +98,7 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     React.useEffect(() => {
         getEmployee()
         getRegister()
-        getPayrollRecordId()
+        getPayrollRecord()
         getAllDepartments()
     }, [])
     return (

@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import { error } from "console";
 import useDarkSide from "@/src/shared/config/useDarkSide";
 
-const Employee: React.FC = () => {
+const Employee = () => {
 
     const {
         register,
