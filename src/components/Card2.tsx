@@ -5,13 +5,14 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useGetStore } from '../store/store';
 import useDarkSide from '../shared/config/useDarkSide';
 
-const Card2 = ({ text, price, grade }: any) => {
+const Card2 = () => {
     const { getVacationSummary, vacation } = useGetStore();
     const [theme] = useDarkSide();
 
     const data = vacation?.data || [];
-
+    let cnt = 0
     const vac = data.map((e: any) => e.totalVacationDays);
+    data.map((e: any) => cnt += e.totalVacationDays);
     const employee = data.map((e: any) => e.employeesOnVacation);
     const getMonth = data.map((e: any) =>
         new Date(`${e?.month}-01`).toLocaleString("en-US", { month: "short" })
@@ -25,25 +26,23 @@ const Card2 = ({ text, price, grade }: any) => {
         <div
             className={`rounded-[20px] p-5 transition-all duration-500 shadow-md
         ${theme === 'dark'
-                    ? 'bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white'
+                    ? 'bg-linear-to-br from-[#0f172a] to-[#1e293b] text-white'
                     : 'bg-white text-gray-900 shadow-sm border border-gray-100'}
       `}
         >
-            {/* Header */}
             <div className="flex justify-between items-center">
-                <h2 className="font-medium text-[20px]">{text}</h2>
+                <h2 className="font-medium text-[20px]">Vacation Info</h2>
                 <SeeAll />
             </div>
 
-            {/* Stats */}
-            <h1 className="text-[28px] my-2.5 font-semibold">{price}</h1>
+            <h1 className="text-[28px] my-2.5 font-semibold">{cnt} Days</h1>
             <div className="flex items-center gap-1">
-                <p
+                {/* <p
                     className={`font-medium ${grade[0] === '+' ? 'text-green-400' : 'text-red-400'
                         }`}
                 >
                     {grade}%
-                </p>
+                </p> */}
                 <p
                     className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
                         } text-sm`}

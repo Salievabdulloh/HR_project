@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { useGetStore } from "@/src/store/store";
 import { Check, Pen, User2, X } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -8,13 +8,15 @@ import { Input } from "antd";
 
 const ProfileId = () => {
     const { employeeId } = useParams();
-    const { allUsers, getUsersAll, editUsers } = useGetStore();
+    const { allUsers, getUsersAll, editUsers, editSalary, getSalaryHistory } = useGetStore();
 
 
     const [editusername, setEditusername] = useState('')
     const [editemail, setEditemail] = useState('')
     const [editphoneNumber, setEditphoneNumber] = useState('')
+    const [editbaseSalary, setEditbaseSalary] = useState('')
     const [openEdit, setopenEdit] = useState(false)
+    const [openEditDialog, setopenEditDialog] = useState<boolean>(false)
 
 
     const getData = allUsers?.data?.find(
@@ -45,6 +47,20 @@ const ProfileId = () => {
         }
     }
 
+    async function salary() {
+        try {
+            let editData = {
+                employeeId: employeeId,
+                baseSalary: editbaseSalary,
+            }
+            await editSalary(editData)
+            setopenEditDialog(false)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
     // if (!getData) {
     //     return (
     //         <div className="flex justify-center items-center min-h-screen text-gray-500">
@@ -55,10 +71,11 @@ const ProfileId = () => {
 
     useEffect(() => {
         getUsersAll()
+        getSalaryHistory()
     }, [])
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-10">
+        <div className="flex justify-center items-center min-h-screen bg-linear-to-b from-gray-50 to-gray-100 p-10">
             <motion.div
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -98,9 +115,19 @@ const ProfileId = () => {
                             <div className="text-gray-500">Department:</div>
                             <Input value={user?.departmentName} disabled />
 
-                            <div className="text-gray-500">Salary:</div>
-                            <Input disabled value={user?.baseSalary} />
-                            <button onClick={edit}><Check /></button>
+                            <div className="text-gray-500 flex items-center gap-2">Salary:
+                                <Pen color="blue" size={20} onClick={() => setopenEditDialog(true)} />
+                            </div>
+                            <div className="flex items-center gap-3">
+                                {openEditDialog && (
+                                    <>
+                                        <Input value={editbaseSalary || user?.baseSalary} onChange={(e) => setEditbaseSalary(e.target.value)} />
+                                        <Check className="cursor-pointer" color="blue" size={30} onClick={salary} />
+                                        <X className="cursor-pointer" color="red" size={30} onClick={() => setopenEditDialog(false)} />
+                                    </>
+                                )}
+                            </div>
+                            <button className="text-blue-500 hover:bg-[blue] rounded p-2 py-1 cursor-pointer w-fit hover:text-white flex items-center gap-2" onClick={edit}>Save<Check color="blue" className="hover:text-white" /></button>
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 gap-y-3 text-[15px]">

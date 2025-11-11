@@ -17,7 +17,7 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     const router = useRouter()
 
     const [id, setId] = React.useState(employeeId)
-    const { user, registration, getRegister, getEmployee, allDepartment, getAllDepartments, deleteEmployee, editEmployee, payrollData, getPayrollRecord } = useGetStore()
+    const { user, registration, getRegister, getEmployee, allDepartment, getAllDepartments, deleteEmployee, editEmployee, payrollDataId, getPayrollRecordById } = useGetStore()
     const [openModal, setopenModal] = React.useState(false)
     const [isDeleted, setIsDeleted] = React.useState(false)
 
@@ -89,7 +89,7 @@ export default function BasicMenu({ employeeId, name, el }: any) {
         handleClose()
     }
 
-    const data = payrollData?.data
+    const data = payrollDataId?.data
 
     const dep = allDepartment?.data
 
@@ -98,9 +98,9 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     React.useEffect(() => {
         getEmployee()
         getRegister()
-        getPayrollRecord()
+        getPayrollRecordById(employeeId)
         getAllDepartments()
-    }, [])
+    }, [employeeId])
     return (
         <div>
             <Button
@@ -190,34 +190,30 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                 open={openPayroll}
                 footer={null}>
                 <div className='overflow-y-auto max-h-[400px]'>
-                    {data?.some(e => e.employeeId == employeeId) ? (
-                        data
-                            .filter(e => e.employeeId == employeeId)
-                            .map(e => (
-                                <div
-                                    key={e.id}
-                                    className="border border-gray-200 rounded-xl p-5 mb-4 bg-gray-50 shadow-sm">
-                                    <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-600">
-                                        <p className="font-medium">Period Start:</p>
-                                        <p>{new Date(e.periodStart).toLocaleDateString()}</p>
-                                        <p className="font-medium">Period End:</p>
-                                        <p>{new Date(e.periodEnd).toLocaleDateString()}</p>
-                                        <p className="font-medium">Gross Pay:</p>
-                                        <p>${e.grossPay}</p>
-                                        <p className="font-medium">Deductions:</p>
-                                        <p>${e.deductions}</p>
-                                        <p className="font-medium text-green-600">Net Pay:</p>
-                                        <p className="text-green-600 font-semibold">${e.netPay}</p>
-                                        <p className="font-medium">Created At:</p>
-                                        <p>{new Date(e.createdAt).toLocaleString()}</p>
-                                    </div>
-                                </div>
-                            ))
-                    ) : (
-                        <div className="p-5 text-center text-gray-500">
-                            <p>There's no payroll record for this user.</p>
+                    {data?.map(e => (
+                        <div
+                            key={e.id}
+                            className="border border-gray-200 rounded-xl p-5 mb-4 bg-gray-50 shadow-sm">
+                            <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-600">
+                                <p className="font-medium">Period Start:</p>
+                                <p>{new Date(e.periodStart).toLocaleDateString()}</p>
+                                <p className="font-medium">Period End:</p>
+                                <p>{new Date(e.periodEnd).toLocaleDateString()}</p>
+                                <p className="font-medium">Gross Pay:</p>
+                                <p>${e.grossPay}</p>
+                                <p className="font-medium">Base Salary:</p>
+                                <p>${e.baseSalary}</p>
+                                <p className="font-medium">Bonus:</p>
+                                <p>${e.bonus}</p>
+                                <p className="font-medium">Deductions:</p>
+                                <p>${e.deductions}</p>
+                                <p className="font-medium text-green-600">Net Pay:</p>
+                                <p className="text-green-600 font-semibold">${e.netPay}</p>
+                                <p className="font-medium">Created At:</p>
+                                <p>{new Date(e.createdAt).toLocaleString()}</p>
+                            </div>
                         </div>
-                    )}
+                    ))}
                 </div>
             </Modal>
         </div >

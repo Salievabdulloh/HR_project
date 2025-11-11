@@ -1,7 +1,7 @@
 'use client'
 import { Widgets } from '@mui/icons-material'
 import { ArrowDown, ArrowDownUp, ArrowLeft, ArrowRight, Calendar, Filter, SearchIcon, Settings } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SeeAll from "@/src/components/SeaAll"
 import Card from "@/src/components/Card2"
 import Button from "@/src/components/Button"
@@ -10,6 +10,7 @@ import MemberTypeChart from '@/src/components/MemberTypeChart'
 import MemberList from '@/src/components/MemberList'
 import Card2 from '@/src/components/Card'
 import useDarkSide from '@/src/shared/config/useDarkSide'
+import { useGetStore } from '@/src/store/store'
 
 const Dashboard = () => {
 
@@ -45,7 +46,15 @@ const Dashboard = () => {
 
     const [search, setSearch] = useState("")
 
+    const { getAllVacations, vacationAll } = useGetStore()
+
+    const getdata = vacationAll?.data
+
+    console.log(vacationAll);
+
     const [theme] = useDarkSide()
+
+    useEffect(() => { getAllVacations() }, [])
 
     return (
         <div className='p-5 px-[25px]'>
@@ -66,8 +75,8 @@ const Dashboard = () => {
                     <AvgWorkHoursChart />
                     <div className="">
                         <div className="flex gap-5">
-                            <Card2 text='Total payroll' price='$34.4322' grade={'+24'} />
-                            <Card text='Job Applicant' price='$12.845' grade={'-15'} />
+                            <Card2 />
+                            <Card />
                         </div>
                         <MemberList search={search} />
                     </div>
@@ -80,13 +89,13 @@ const Dashboard = () => {
                                 <h2 className='font-medium text-[20px]'>Schedule</h2>
                                 <SeeAll />
                             </div>
-                            <div className={`flex items-center ${theme === 'dark' ? "bg-[#171d2b]" : "bg-[hsl(0,0%,95%)]"} rounded-lg  p-1 m-4 justify-between`}>
+                            {/* <div className={`flex items-center ${theme === 'dark' ? "bg-[#171d2b]" : "bg-[hsl(0,0%,95%)]"} rounded-lg  p-1 m-4 justify-between`}>
                                 <Button icon={<ArrowLeft size={16} />} />
                                 <p>10 Nov 2025</p>
                                 <Button icon={<ArrowRight size={16} />} />
-                            </div>
+                            </div> */}
                         </div>
-                        <div className="mt-8">
+                        {/* <div className="mt-8">
                             <div className={`flex text-[gray] border-b-[1] items-center gap-4`}>
                                 {items.map(e => (
                                     <div
@@ -110,7 +119,8 @@ const Dashboard = () => {
                                     </div>
                                 )}
                             </div>
-                        </div>
+                        </div> */}
+
                     </div>
                 </div>
             </div>

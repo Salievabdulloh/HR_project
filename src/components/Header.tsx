@@ -74,7 +74,7 @@ const Header = () => {
   const getRole = user?.data?.role
   const pathname = usePathname()
   const [theme, toggleTheme] = useDarkSide()
-  
+
   useEffect(() => {
     getRegister()
   }, [])
@@ -94,7 +94,6 @@ const Header = () => {
         }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
-        {/* Logo */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           className={`font-bold text-xl tracking-wide cursor-pointer ${theme === 'dark' ? 'text-blue-400' : 'text-blue-700'}`}
@@ -102,7 +101,6 @@ const Header = () => {
           <Link href="/">HR<span className={`${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Project</span></Link>
         </motion.div>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           {navItems.map(({ href, label, icon }) => (
             <Link
@@ -138,7 +136,6 @@ const Header = () => {
               Get Started
             </Link>
           )}
-          {/* Mobile Menu Toggle */}
           <button
             className={`md:hidden transition ${theme === 'dark' ? 'text-gray-200 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'}`}
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -149,7 +146,6 @@ const Header = () => {
         <FormControlLabel control={<MaterialUISwitch sx={{ m: 1 }} />} onClick={toggleTheme} />
       </div>
 
-      {/* Mobile Dropdown Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div

@@ -1,19 +1,48 @@
 "use client";
 
 import { useGetStore } from '@/src/store/store'
-import React, { useEffect, useMemo } from 'react'
-import { ArrowUpRight, ArrowDownRight, DollarSign } from 'lucide-react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { ArrowUpRight, ArrowDownRight, DollarSign, Save, Check, X } from 'lucide-react'
 import useDarkSide from '@/src/shared/config/useDarkSide'
+import { Input, Modal } from 'antd';
+import toast from 'react-hot-toast';
 
 const Payment = () => {
-    const { payments, getPayments } = useGetStore()
+    const { payments, getPayments, salaryHistory, editSalaryHistory, getSalaryHistory } = useGetStore()
     const data = payments?.data || []
     const [theme] = useDarkSide()
 
-    useEffect(() => { getPayments() }, [])
+    const [editDialog, setEditDialog] = useState(false)
+    const [percent, setpercent] = useState<number>(0)
+    const [id, setid] = useState<number>(0)
 
-    // ✅ Example percentage change calculation:
-    // (currentMonth - previousMonth) / previousMonth * 100
+    function getElement(getId: number) {
+        setEditDialog(true)
+        setid(getId)
+        // console.log(e.id);
+    }
+
+
+
+    async function edit() {
+        try {
+            let editPercent = {
+                departmentId: id,
+                bonusPercentage: percent,
+            }
+            await editSalaryHistory(editPercent)
+            setEditDialog(false)
+            toast.success("The percentage has been added")
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        getPayments()
+        getSalaryHistory()
+    }, [])
+
     const dataWithPercentage = useMemo(() => {
         if (!data || data.length === 0) return []
         return data.map((item, i) => {
@@ -30,7 +59,6 @@ const Payment = () => {
                     ? 'bg-linear-to-t from-[#0a0a0f] via-[#0f172a] to-[#172554] text-gray-100'
                     : 'bg-linear-to-t from-blue-50 via-white to-blue-100 text-gray-900'}`}>
             <div className="max-w-4xl mx-auto">
-                {/* Header */}
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-3">
                         <DollarSign
@@ -42,12 +70,11 @@ const Payment = () => {
                         </h2>
                     </div>
                 </div>
-
-                {/* Payment cards */}
                 <div className="grid gap-4 sm:grid-cols-1">
                     {dataWithPercentage.map((e) => (
                         <div
                             key={e.id}
+                            onClick={() => getElement(e.id)}
                             className={`rounded-2xl p-5 shadow-md border
                                 transition-all duration-300
                                 ${theme === 'dark'
@@ -60,6 +87,16 @@ const Payment = () => {
                                         #{e.id}
                                     </span>
                                     <h3 className="text-lg font-semibold">{e.name}</h3>
+                                    {editDialog && e.id === id && (
+                                        <>
+                                            <Input placeholder='add percentage' type='number' min={0} max={100} value={percent} onChange={(e) => setpercent(Number(e.target.value))} />
+                                            <Check onClick={edit} size={40} />
+                                            <X onClick={() => {
+                                                setEditDialog(false)
+                                                setpercent(0)
+                                            }} />
+                                        </>
+                                    )}
                                 </div>
                                 <div className="text-right">
                                     <p className="text-xl font-bold">${e.totalAmount.toLocaleString()}</p>
@@ -87,7 +124,6 @@ const Payment = () => {
                     ))}
                 </div>
 
-                {/* Empty state */}
                 {dataWithPercentage.length === 0 && (
                     <div className="text-center text-gray-500 mt-10">
                         <p>No payment records found.</p>

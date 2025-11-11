@@ -14,6 +14,7 @@ import Link from 'next/link';
 // import { useGetStore } from '@/store/store';
 import Image from 'next/image';
 import { useGetStore } from '../store/store';
+import useDarkSide from '../shared/config/useDarkSide';
 
 export default function MenuAccount() {
     const [open, setOpen] = React.useState(false);
@@ -26,6 +27,8 @@ export default function MenuAccount() {
     const { getRegister, user } = useGetStore()
 
     const getToken = localStorage.getItem('access_token')
+
+    const [theme] = useDarkSide()
 
     const handleClose = (event: any) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {

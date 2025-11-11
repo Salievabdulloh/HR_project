@@ -29,6 +29,7 @@ const Employee = () => {
             phone: "909090909",
             password: "pleaseLetmein.7",
             confirmPassword: "pleaseLetmein.7",
+            baseSalary: '2000',
             position: 'Junior',
             departmentId: 0,
             userRole: 'Employee',
@@ -405,7 +406,9 @@ const Employee = () => {
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 text-center">
-                                                <BasicMenu name={e.firstName} employeeId={e.id} el={e} />
+                                                {getUser?.length == 0 && (
+                                                    <BasicMenu name={e.firstName} employeeId={e.id} el={e} />
+                                                )}
                                             </td>
                                         </motion.tr>
                                     ))}
@@ -454,6 +457,17 @@ const Employee = () => {
                             {errors.phone && <p className="text-red-500 text-sm">Phone is required</p>}
                         </div>
                         <div>
+                            <input
+                                type="number"
+                                {...register("baseSalary", {
+                                    required: true
+                                })}
+                                placeholder="BaseSalary"
+                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                            />
+                            {errors.baseSalary && <p className="text-red-500 text-sm">BaseSalary is required</p>}
+                        </div>
+                        <div>
                             <select
                                 {...register("departmentId", {
                                     required: true
@@ -462,6 +476,7 @@ const Employee = () => {
                                 {dep?.map(e => (
                                     <option className="cursor-pointer" value={e.id}>{e.name}</option>
                                 ))}
+
                             </select>
                             {errors.departmentId && <p className="text-red-500 text-sm">DepartmentId is required</p>}
                         </div>
