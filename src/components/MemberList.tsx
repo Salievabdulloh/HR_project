@@ -14,26 +14,26 @@ import useDarkSide from "../shared/config/useDarkSide";
 import { Input, Modal } from "antd";
 import { CheckRounded } from "@mui/icons-material";
 
-const MemberList: React.FC = ({ search }: any) => {
+const MemberList: React.FC = () => {
 
     const { getSalaryAnomoly, getSalaryAnomalyAll, salary, salaryAll, addCommentSalary, editSalaryAnomaly, salaryById, getSalaryAnomalyId } = useGetStore()
 
     const [view, setView] = useState<boolean>(false)
     const [id, setid] = useState<number>(0)
     const [input, setInput] = useState<boolean>(false)
-    const [addinput, setaddInput] = useState<strign>('')
+    const [addinput, setaddInput] = useState<string>('')
 
-    const data = salary?.data
-    console.log(data);
+    const data = salary
+    console.log(salaryAll);
 
-    const getEmployeeId = salaryAll?.data?.find(e => e.id == id)
+    const getEmployeeId = salaryAll?.find(e => e?.id == id)
     const getid = getEmployeeId?.employeeId
 
 
     async function edit() {
         try {
             let addComment = {
-                id: id
+                id: id,
             }
             await editSalaryAnomaly(addComment)
             setView(false)
@@ -84,7 +84,7 @@ const MemberList: React.FC = ({ search }: any) => {
                 centered
             // className="rounded-2xl"
             >
-                {salaryById?.data?.map(e => (
+                {salaryById?.map(e => (
                     <div
                         key={e.id}
                         className={`p-6 rounded-2xl border shadow-sm transition-all duration-300
@@ -216,7 +216,7 @@ const MemberList: React.FC = ({ search }: any) => {
                                     ${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}
                                     `}>
                                 <td className="py-3 px-4 font-medium" > {item?.fullName}</td>
-                                <td className="py-3 px-4">{item?.month.toLocaleString("en-US", { month: "short" })}</td>
+                                <td className="py-3 px-4">{item?.month}</td>
                                 <td className="py-3 px-4">{item?.deviation.toFixed()}%</td>
                                 <td className="py-3 px-4 text-center">
                                     <span

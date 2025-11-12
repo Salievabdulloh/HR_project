@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 
 const Payment = () => {
     const { payments, getPayments, salaryHistory, editSalaryHistory, getSalaryHistory } = useGetStore()
-    const data = payments?.data || []
+    const data = payments || []
     const [theme] = useDarkSide()
 
     const [editDialog, setEditDialog] = useState(false)
@@ -45,7 +45,7 @@ const Payment = () => {
 
     const dataWithPercentage = useMemo(() => {
         if (!data || data.length === 0) return []
-        return data.map((item, i) => {
+        return data?.map((item, i) => {
             const prev = data[i - 1]?.totalAmount || item.totalAmount
             const percentChange = ((item.totalAmount - prev) / prev) * 100
             return { ...item, percentChange: Math.round(percentChange) }
@@ -88,14 +88,14 @@ const Payment = () => {
                                     </span>
                                     <h3 className="text-lg font-semibold">{e.name}</h3>
                                     {editDialog && e.id === id && (
-                                        <>
-                                            <Input placeholder='add percentage' type='number' min={0} max={100} value={percent} onChange={(e) => setpercent(Number(e.target.value))} />
-                                            <Check onClick={edit} size={40} />
-                                            <X onClick={() => {
+                                        <div className='flex gap-4 items-center'>
+                                            <Input placeholder='Add percentage' type='text' min={0} maxLength={100} value={percent} onChange={(e) => setpercent(Number(e.target.value))} />
+                                            <Check onClick={edit} size={20} />
+                                            <X size={20} onClick={() => {
                                                 setEditDialog(false)
                                                 setpercent(0)
                                             }} />
-                                        </>
+                                        </div>
                                     )}
                                 </div>
                                 <div className="text-right">
@@ -104,18 +104,6 @@ const Payment = () => {
                             </div>
 
                             <div className="flex items-center justify-between mt-2">
-                                <div className="flex items-center gap-1">
-                                    {e.totalAmount > 0 ? (
-                                        <ArrowUpRight size={16} className="text-green-500" />
-                                    ) : (
-                                        <ArrowDownRight size={16} className="text-red-500" />
-                                    )}
-                                    <span
-                                        className={`font-medium ${e.totalAmount > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                        {e.totalAmount > 0 ? '+' : ''}
-                                        {e.totalAmount}%
-                                    </span>
-                                </div>
                                 <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                                     vs last record
                                 </p>
@@ -130,7 +118,7 @@ const Payment = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     )
 }
 

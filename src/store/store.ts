@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import api from '../lib/api'
+import { StringDecoder } from 'node:string_decoder'
 
 interface RegisterData {
     username?: string
@@ -17,6 +18,32 @@ interface RegisterData {
     lastName?: string
 }
 
+interface PutData {
+    employeeId: number;
+    username: string;
+    email: string;
+    phoneNumber: number;
+}
+
+interface MyRegisterData {
+    username: string
+    email: string
+    phoneNumber: number
+    role: string
+    registrationDate: string
+    employeeInfo: {
+        id: number
+        firstName: string
+        lastName: string
+        position: string
+        hireDate: string
+        baseSalary: number
+        isActive: boolean
+        departmentName: string
+    }
+    length: number
+}
+
 interface LoginData {
     username: string
     password: string
@@ -28,7 +55,7 @@ interface EmployeeDate {
     lastName: string
     position: string
     hireDate: string
-    baseSalary: number
+    // baseSalary: number
     isActive: boolean
     departmentName: string
 }
@@ -45,10 +72,10 @@ interface EmployeeByid {
 }
 
 interface GetAllUsers {
-    employeeId?: number
-    username?: string
+    employeeId: number
+    username: string
     email: string
-    phoneNumber?: string
+    phoneNumber?: number
 }
 
 // interface payrollById {
@@ -69,6 +96,23 @@ interface Department {
     description?: string
 }
 
+interface EmployeeDepartment {
+    id: number,
+    name: string,
+    description: string
+    employees: [{
+        id: number,
+        length: number
+        firstName: string,
+        lastName: string,
+        position: string,
+        hireDate: string,
+        baseSalary: number,
+        isActive: boolean,
+        departmentName: string
+    }]
+}
+
 interface PayrollRecord {
     id: number
     periodStart: string
@@ -82,14 +126,26 @@ interface PayrollRecord {
 }
 
 interface Month {
+    id: number
     month: string
     totalNetPay: number
     totalGrossPay: number
 }
 
+interface SalaryHistoryUpdate {
+    employeeId: number,
+    baseSalary: number,
+    bonus: number
+}
+
+interface MarkViewed {
+    id: number
+}
+
 interface Salary {
     departmentId: number
     bonusPercentage: number
+
 }
 
 interface SalaryId {
@@ -97,7 +153,7 @@ interface SalaryId {
     month: string,
     expectedAmount: string,
     actualAmount: string,
-    deviationPercent: string,
+    deviationPercent: number,
     isViewed: boolean,
     reviewComment: string,
     employeeId: number,
@@ -121,8 +177,60 @@ interface FirstReport {
     DepartmentId?: number
 }
 
+interface SecondReport {
+    Format: string
+    EmployeeId?: number
+    StartPeriod?: string
+    EndPeriod?: string
+    DepartmentId?: number
+}
+
+interface ThirdReport {
+    Format: string
+    EmployeeId?: number
+    DepartmentId?: number
+    FromMonth?: string
+    ToMonth?: string
+}
+
+interface FourthReport {
+    Format: string
+    EmployeeId?: number
+    DepartmentId?: number
+    FromMonth?: string
+    ToMonth?: string
+    IsReviewed?: boolean
+}
+
+interface FifthReport {
+    Format: string
+    EmployeeId?: string
+    MinEmployeeCount?: number
+}
+
 interface editMyVacationRecord {
     id: number
+}
+
+interface VacationRecordData {
+    id: number
+    employeeId: number
+    employee: {
+        id: number
+        firstName: string
+        lastName: string
+        position: string
+        hireDate: string
+        baseSalary: number
+        isActive: true
+        departmentName: string
+    }
+    startDate: string,
+    endDate: string,
+    type: string,
+    status: string,
+    daysCount: number,
+    paymentAmount: number
 }
 
 interface Send {
@@ -133,30 +241,147 @@ interface Send {
 }
 
 interface GetPayrollUsersId {
+    id: number,
+    periodStart: string,
+    periodEnd: string,
+    grossPay: number,
+    deductions: number,
+    netPay: number,
+    createdAt: string,
+    employeeId: number,
+    employeeName: string,
+    baseSalary: number,
+    bonus: number
+}
+
+interface showAllDepartment {
+    id: number,
+    name: string,
+    description: string
+    employeeCount: number
+}
+
+interface AllEmployeesUser {
+    employeeId: number
+    username: string
+    email: string
+    phoneNumber: number
+    role: string
+    registrationDate: string
+    employeeInfo: {
+        id: number
+        firstName: string
+        lastName: string
+        position: string
+        hireDate: string
+        baseSalary: number
+        isActive: boolean
+        departmentName: string
+    }
+}
+
+interface paymentsData {
+    id: number,
+    name: string,
+    totalAmount: number
+}
+
+interface Dep {
+    id: number,
+    name: string,
+    description: string
+}
+
+interface RegistrationResponse {
+    statusCode: number;
+    message: string;
+    errors: any;
+    data: string;
+}
+
+interface DeleteEmployeeResponse {
+    statusCode: number,
+    message: string,
+    errors: any,
+    data: string
+}
+
+interface VacationSummaryData {
+    month: string,
+    totalVacationDays: number,
+    employeesOnVacation: number
+}
+
+interface MyVacationData {
     id: number
+    totalDaysPerYear: number
+    usedDays: number
+    remainingDays: number
+    year: number
+    byExperienceBonusDays: number
+    periodStart: string
+    periodEnd: string
+    employeeId: number
+    employee: {
+        id: number
+        firstName: string
+        lastName: string
+        position: string
+        hireDate: string
+        baseSalary: number
+        isActive: boolean
+        departmentName: string
+    }
+}
+
+interface SalaryAllData {
+    id: number,
+    month: string,
+    expectedAmount: number,
+    actualAmount: number,
+    deviationPercent: string,
+    isViewed: boolean,
+    reviewComment: string,
+    employeeId: number,
+    employeeName: string
+}
+
+interface Statistics {
+    month: string,
+    totalNetPay: number
+}
+
+interface SalaryData {
+    id: number,
+    fullName: string,
+    month: string,
+    deviation: number,
+    isViewed: boolean
 }
 
 interface GetStore {
-    user: RegisterData[]
-    allUsers: GetAllUsers[]
+    user: MyRegisterData | null
+    setUser: (user: MyRegisterData) => void
+    allUsers: AllEmployeesUser[]
     employee: EmployeeDate[]
     getId: EmployeeByid[]
     payrollData: PayrollRecord[]
     payrollMonthId: Month[]
     salaryById: SalaryId[]
     salaryHistory: Salary[]
-    departmentEmployee: Department[]
-    allDepartment: []
-    department: []
-    vacation: []
-    payroll: []
-    myVacation: []
-    salary: []
-    payments: []
+    departmentEmployee: EmployeeDepartment[]
+    allDepartment: Dep[]
+    department: showAllDepartment[]
+    vacation: VacationSummaryData[]
+    payroll: Statistics[]
+    myVacation: MyVacationData | null
+    setMyVacation: (myVacation: MyVacationData) => void
+    salary: SalaryData[]
+    payments: paymentsData[]
     payrollId: []
-    myVacationRecord: []
+    myVacationRecord: VacationRecordData[]
     vacationAll: []
-    salaryAll: []
+    salaryAll: SalaryAllData[]
     payrollDataId: GetPayrollUsersId[]
 
     getRegister: () => Promise<void>
@@ -169,38 +394,43 @@ interface GetStore {
     getEmployee: () => Promise<void>
     getDepartment: () => Promise<void>
     login: (data: LoginData) => Promise<string>
-    registration: (data: RegisterData) => Promise<void>
-    deleteEmployee: (data: EmployeeDate) => Promise<void>
+    registration: (data: RegisterData) => Promise<RegistrationResponse>
+    deleteEmployee: (id: number) => Promise<DeleteEmployeeResponse>
     editEmployee: (data: EmployeeDate) => Promise<void>
     getEmployeeId: (data: EmployeeByid) => Promise<void>
     getPayrollRecordId: (data: PayrollRecord) => Promise<void>
     getPayrollRecord: () => Promise<void>
     editUsers: (data: GetAllUsers) => Promise<void>
-    editUser: (data: RegisterData) => Promise<void>
+    editUser: (data: PutData) => Promise<void>
     editDepartmentEmployees: (data: Department) => Promise<void>
     deleteDepartmentEmployees: (data: Department) => Promise<void>
     addDepartmentEmployees: (data: Department) => Promise<void>
-    getPayrollmonth: (data: Month) => Promise<void>
+    getPayrollmonth: (id: number) => Promise<void>
     getPayments: () => Promise<void>
     getSalaryHistory: () => Promise<void>
     editSalaryHistory: (data: Salary) => Promise<void>
-    editSalaryAnomaly: (data: Salary) => Promise<void>
-    getSalaryAnomalyId: (data: SalaryId) => Promise<void>
+    editSalaryAnomaly: (data: MarkViewed) => Promise<void>
+    getSalaryAnomalyId: (id: number | undefined) => Promise<void>
     getSalaryAnomalyAll: () => Promise<void>
     getMyVacation: () => Promise<void>
     getReportsEmployees: (data: FirstReport) => Promise<void>
+    getReportsPayroll: (data: SecondReport) => Promise<void>
+    getReportsSalaries: (data: ThirdReport) => Promise<void>
+    getReportsAnomalies: (data: FourthReport) => Promise<void>
+    getReportsDepartment: (data: FifthReport) => Promise<void>
     getMyVacationRecord: () => Promise<void>
     addCommentSalary: (data: addComment) => Promise<void>
     editSalary: (data: EditOneSalary) => Promise<void>
     getAllVacations: () => Promise<void>
     cancelMyVacation: (data: editMyVacationRecord) => Promise<void>
     sendRequest: (data: Send) => Promise<void>
-    getPayrollRecordById: (data:GetPayrollUsersId) => Promise<void>
+    getPayrollRecordById: (id: number) => Promise<void>
 }
 
 
 export const useGetStore = create<GetStore>((set, get) => ({
-    user: [],
+    user: null,
+    setUser: (user) => set({ user }),
     employee: [],
     getId: [],
     allUsers: [],
@@ -217,7 +447,8 @@ export const useGetStore = create<GetStore>((set, get) => ({
     salaryHistory: [],
     salaryById: [],
     salaryAll: [],
-    myVacation: [],
+    myVacation: null,
+    setMyVacation: (myVacation) => set({ myVacation }),
     myVacationRecord: [],
     vacationAll: [],
     payrollDataId: [],
@@ -225,7 +456,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getRegister: async () => {
         try {
             let { data } = await api.get(`/users/me`)
-            set(() => ({ user: data }))
+            set(() => ({ user: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -233,15 +464,15 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getDepartment: async () => {
         try {
             let { data } = await api.get(`/departments/summary`)
-            set(() => ({ department: data }))
+            set(() => ({ department: data.data }))
         } catch (error) {
             console.error(error)
         }
     },
     getSalaryHistory: async () => {
         try {
-            let data = await api.get(`/salary_history/get`)
-            set(() => ({ salaryHistory: data }))
+            let { data } = await api.get(`/salary_history/get`)
+            set(() => ({ salaryHistory: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -256,7 +487,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     },
     getSalaryAnomalyId: async (id) => {
         try {
-            let data = await api.get(`/salary_anomaly/get?employeeId=${id}`)
+            let { data } = await api.get(`/salary_anomaly/get?employeeId=${id}`)
             set(() => ({ salaryById: data.data }))
         } catch (error) {
             console.error(error)
@@ -264,7 +495,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     },
     getSalaryAnomalyAll: async () => {
         try {
-            let data = await api.get(`/salary_anomaly/get-all`)
+            let { data } = await api.get(`/salary_anomaly/get-all`)
             set(() => ({ salaryAll: data.data }))
         } catch (error) {
             console.error(error)
@@ -273,7 +504,8 @@ export const useGetStore = create<GetStore>((set, get) => ({
     addCommentSalary: async (data) => {
         try {
             await api.put(`/salary_anomaly/add-comment`, data)
-            await get().getSalaryAnomalyId()
+            // await get().getSalaryAnomalyId()
+            await get().getSalaryAnomalyAll()
         } catch (error) {
             console.error(error)
         }
@@ -289,7 +521,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getAllDepartments: async () => {
         try {
             let { data } = await api.get(`/departments`)
-            set(() => ({ allDepartment: data }))
+            set(() => ({ allDepartment: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -297,7 +529,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getDepartmentEmployees: async () => {
         try {
             let { data } = await api.get(`/departments/with-employees`)
-            set(() => ({ departmentEmployee: data }))
+            set(() => ({ departmentEmployee: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -336,8 +568,8 @@ export const useGetStore = create<GetStore>((set, get) => ({
     },
     getSalaryAnomoly: async () => {
         try {
-            let { data } = await api.get(`/salary_anomaly/get-list`)
-            set(() => ({ salary: data }))
+            let res = await api.get(`/salary_anomaly/get-list`)
+            set(() => ({ salary: res.data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -345,7 +577,15 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getMyVacation: async () => {
         try {
             let { data } = await api.get(`/vacation_balances/me`)
-            set(() => ({ myVacation: data }))
+            set(() => ({ myVacation: data.data }))
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getMyVacationRecord: async () => {
+        try {
+            let { data } = await api.get(`/vacation/my_records`)
+            set(() => ({ myVacationRecord: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -358,25 +598,121 @@ export const useGetStore = create<GetStore>((set, get) => ({
             console.error(error)
         }
     },
-    getMyVacationRecord: async () => {
-        try {
-            let { data } = await api.get(`/vacation/my_records`)
-            set(() => ({ myVacationRecord: data }))
-        } catch (error) {
-            console.error(error)
-        }
-    },
     cancelMyVacation: async (data) => {
         try {
-            await api.get(`/vacation/cancel/${data.id}`, data)
+            await api.get(`/vacation/cancel/${data.id}`, { data })
             await get().getMyVacationRecord()
         } catch (error) {
             console.error(error)
         }
     },
-    getReportsEmployees: async (params) => {
+    getReportsEmployees: async (params: Record<string, any>) => {
         try {
             let res = await api.get(`/reports/employees`, {
+                params,
+                responseType: 'blob',
+            })
+
+            console.log("Params type:", params, typeof params, params instanceof Promise);
+
+            const blob = new Blob([res.data], { type: 'text/csv' })
+            const url = window.URL.createObjectURL(blob);
+
+            const contentDisposition = res.headers['content-disposition'];
+            const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+            const filename = filenameMatch ? filenameMatch[1] : 'employees.csv';
+
+            const link = document.createElement("a")
+            link.href = url
+            link.download = filename
+            link.click()
+
+            window.URL.revokeObjectURL(url)
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getReportsPayroll: async (params: Record<string, any>) => {
+        try {
+            let res = await api.get(`/reports/payrolls`, {
+                params,
+                responseType: 'blob',
+            })
+
+            const blob = new Blob([res.data], { type: 'text/csv' })
+            const url = window.URL.createObjectURL(blob);
+
+            const contentDisposition = res.headers['content-disposition'];
+            const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+            const filename = filenameMatch ? filenameMatch[1] : 'employees.csv';
+
+            const link = document.createElement("a")
+            link.href = url
+            link.download = filename
+            link.click()
+
+            window.URL.revokeObjectURL(url)
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getReportsSalaries: async (params: Record<string, any>) => {
+        try {
+            let res = await api.get(`/reports/salaries`, {
+                params,
+                responseType: 'blob',
+            })
+
+            console.log("Params type:", params, typeof params, params instanceof Promise);
+
+            const blob = new Blob([res.data], { type: 'text/csv' })
+            const url = window.URL.createObjectURL(blob);
+
+            const contentDisposition = res.headers['content-disposition'];
+            const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+            const filename = filenameMatch ? filenameMatch[1] : 'employees.csv';
+
+            const link = document.createElement("a")
+            link.href = url
+            link.download = filename
+            link.click()
+
+            window.URL.revokeObjectURL(url)
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getReportsAnomalies: async (params: Record<string, any>) => {
+        try {
+            let res = await api.get(`/reports/anomalies`, {
+                params,
+                responseType: 'blob',
+            })
+
+            const blob = new Blob([res.data], { type: 'text/csv' })
+            const url = window.URL.createObjectURL(blob);
+
+            const contentDisposition = res.headers['content-disposition'];
+            const filenameMatch = contentDisposition?.match(/filename="?([^"]+)"?/);
+            const filename = filenameMatch ? filenameMatch[1] : 'employees.csv';
+
+            const link = document.createElement("a")
+            link.href = url
+            link.download = filename
+            link.click()
+
+            window.URL.revokeObjectURL(url)
+
+        } catch (error) {
+            console.error(error)
+        }
+    },
+    getReportsDepartment: async (params: Record<string, any>) => {
+        try {
+            let res = await api.get(`/reports/anomalies`, {
                 params,
                 responseType: 'blob',
             })
@@ -410,7 +746,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getPayments: async () => {
         try {
             let { data } = await api.get(`/departments/payments`)
-            set(() => ({ payments: data }))
+            set(() => ({ payments: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -418,7 +754,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getPayrollRecord: async () => {
         try {
             let { data } = await api.get(`/payroll_record/get-all`)
-            set(() => ({ payrollData: data }))
+            set(() => ({ payrollData: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -426,7 +762,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getPayrollRecordById: async (id) => {
         try {
             let { data } = await api.get(`/payroll_record/get/${id}`)
-            set(() => ({ payrollDataId: data }))
+            set(() => ({ payrollDataId: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -434,7 +770,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getPayrollmonth: async (id) => {
         try {
             let { data } = await api.get(`/payroll_record/get-graph?monthsRange=${id}`)
-            set(() => ({ payrollMonthId: data }))
+            set(() => ({ payrollMonthId: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -442,7 +778,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getPayrollRecordTotal: async () => {
         try {
             let { data } = await api.get(`/payroll_record/statistics/total-net-pay`)
-            set(() => ({ payroll: data }))
+            set(() => ({ payroll: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -450,7 +786,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getVacationSummary: async () => {
         try {
             let { data } = await api.get(`/vacation/summary`)
-            set(() => ({ vacation: data }))
+            set(() => ({ vacation: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -466,7 +802,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getUsersAll: async () => {
         try {
             let { data } = await api.get(`/users`)
-            set(() => ({ allUsers: data }))
+            set(() => ({ allUsers: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -482,7 +818,7 @@ export const useGetStore = create<GetStore>((set, get) => ({
     getEmployee: async () => {
         try {
             let { data } = await api.get(`/employees?PageSize=1000`)
-            set(() => ({ employee: data }))
+            set(() => ({ employee: data.data }))
         } catch (error) {
             console.error(error)
         }
@@ -497,8 +833,9 @@ export const useGetStore = create<GetStore>((set, get) => ({
     },
     deleteEmployee: async (id) => {
         try {
-            await api.delete(`/employees/${id}`)
+            let res = await api.delete(`/employees/${id}`)
             await get().getEmployee()
+            return res.data
         } catch (error) {
             console.error(error)
         }

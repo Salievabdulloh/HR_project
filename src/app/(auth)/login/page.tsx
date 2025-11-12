@@ -23,19 +23,20 @@ const Login = () => {
 
   async function onSubmit(data: any) {
     try {
-      const res = await login(data)
-      const token = res?.access_token || res?.token || res?.data?.access_token || res
+      const token = await login(data); // login() already returns the token string
+
       if (token) {
-        localStorage.setItem('access_token', token)
-        toast.success('Welcome 👋')
-        router.push('/dashboard')
+        localStorage.setItem("access_token", token);
+        toast.success("Welcome 👋");
+        router.push("/dashboard")
       } else {
-        toast.error('Invalid username or password')
+        toast.error("Login failed: no token found");
       }
-    } catch (err) {
-      console.error(err)
-      toast.error('Something went wrong. Please try again.')
+    } catch (error) {
+      toast.error("Login failed");
+      console.error(error);
     }
+
   }
 
   useEffect(() => {
@@ -114,17 +115,6 @@ const Login = () => {
             Login
           </button>
 
-          <p className={`text-center text-sm mt-4 transition-colors duration-700
-            ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-            Don’t have an account?{' '}
-            <Link
-              href="/registration"
-              className={`font-medium hover:underline transition
-                ${theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}
-            >
-              Register
-            </Link>
-          </p>
         </form>
       </div>
     </div>

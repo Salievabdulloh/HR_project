@@ -11,7 +11,7 @@ const Card = () => {
 
     let cnt = 0
 
-    const data = payroll?.data || [];
+    const data = payroll || [];
     const months = data.map((e: any) => e.month?.slice(0, 3)) || [];
     const totals = data.map((e: any) => e.totalNetPay) || [];
     const totalsPrice = data.map((e: any) => cnt += e.totalNetPay) || [];

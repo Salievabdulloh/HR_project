@@ -48,7 +48,7 @@ const Dashboard = () => {
 
     const { getAllVacations, vacationAll } = useGetStore()
 
-    const getdata = vacationAll?.data
+    // const getdata = vacationAll
 
     console.log(vacationAll);
 
@@ -78,7 +78,7 @@ const Dashboard = () => {
                             <Card2 />
                             <Card />
                         </div>
-                        <MemberList search={search} />
+                        <MemberList />
                     </div>
                 </div>
                 <div className="flex gap-5 items-stretch flex-col">

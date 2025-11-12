@@ -3,7 +3,8 @@ import useDarkSide from '@/src/shared/config/useDarkSide'
 import { useGetStore } from '@/src/store/store'
 import { Report, Wallet } from '@mui/icons-material'
 import { Briefcase, Calendar, CardSim, CircleSlash, Compass, DollarSign, File, FileSearch, FileText, HelpCircle, Layers, LucideBriefcaseBusiness, Settings, Users, WalletCards } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 interface layoutProps {
@@ -12,13 +13,11 @@ interface layoutProps {
 
 const layout: React.FC<layoutProps> = ({ children }) => {
 
-    const [selected, setSelected] = useState(1)
-
     const { user, getRegister } = useGetStore()
 
-    const router = useRouter()
-
     const [theme] = useDarkSide()
+
+    const pathname = usePathname()
 
     const items = [
         { id: 1, name: "Dashboard", icon: <Compass />, path: "/dashboard" },
@@ -35,7 +34,7 @@ const layout: React.FC<layoutProps> = ({ children }) => {
         { id: 4, name: "Help", icon: <HelpCircle />, path: "/" },
     ]
 
-    const getUser = user?.data
+    const getUser = user
 
     console.log(getUser);
 
@@ -46,26 +45,31 @@ const layout: React.FC<layoutProps> = ({ children }) => {
 
     return (
         <div className='flex'>
-            <div className={`p-5 z-10 w-[18%] fixed h-screen ${!theme ? "bg-[white]" : "bg-black"} flex flex-col gap-[15px]`}>
+            <div className={`p-5 z-10 w-[18%] fixed h-screen ${theme === 'dark' ? "bg-[black]" : "bg-white"} flex flex-col gap-[15px]`}>
                 <div className='text-[14px] mb-3 text-[#b4b4b4]'>MAIN</div>
                 <div className="">
                     {items.map(e => (
-                        <div key={e.id} onClick={() => {
-                            setSelected(e.id)
-                            router.push(e.path)
-                        }} className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium ${selected === e.id ? "bg-amber-100 font-bold text-amber-400" : ""} gap-2`}>
+                        <Link
+                            key={e.id}
+                            href={e.path}
+                            className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium 
+                            ${pathname === e.path ? "bg-amber-100 font-bold text-amber-400" : ""} gap-2`}>
                             {e.icon}
                             <p>{e.name}</p>
-                        </div>
+                        </Link>
                     ))}
                 </div>
                 <div className='text-[14px] mt-5 mb-3 text-[#b4b4b4]'>ORGANIZATION</div>
                 <div className="">
                     {items2.map(e => (
-                        <div key={e.id} onClick={() => router.push(e.path)} className={`flex p-2 cursor-pointer mb-2 items-center font-medium gap-2`}>
+                        <Link
+                            key={e.id}
+                            href={e.path}
+                            className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium 
+                            ${pathname === e.path ? "bg-amber-100 font-bold text-amber-400" : ""} gap-2`}>
                             {e.icon}
                             <p>{e.name}</p>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

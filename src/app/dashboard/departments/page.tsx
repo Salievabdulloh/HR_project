@@ -19,7 +19,7 @@ import useDarkSide from '@/src/shared/config/useDarkSide'
 const Departments = () => {
     const { getDepartmentEmployees, departmentEmployee, editDepartmentEmployees, deleteDepartmentEmployees, addDepartmentEmployees } = useGetStore()
 
-    const departments = departmentEmployee?.data || []
+    const departments = departmentEmployee || []
 
     const [addDialog, setaddDialog] = useState<boolean>(false)
     const [addName, setaddName] = useState('')
@@ -46,15 +46,13 @@ const Departments = () => {
     async function edit() {
         try {
             let editData = {
-                id: editId,
+                id: Number(editId),
                 name: editName,
                 description: editDescription,
             }
             await editDepartmentEmployees(editData)
             setEditDialog(false)
             toast.success("The Department updated successfully")
-            // if(res) {
-            // }
         } catch (error) {
             console.error(error)
         }
@@ -63,7 +61,7 @@ const Departments = () => {
     async function removeDep() {
         try {
             await deleteDepartmentEmployees(el.id)
-            toast.error("Deleted successfully")
+            toast.success("Deleted successfully")
             setOpen(false)
         } catch (error) {
             console.error(error);
@@ -77,7 +75,7 @@ const Departments = () => {
                 description: addDescription,
             }
             let res = await addDepartmentEmployees(add)
-            if (res.ok) {
+            if (add) {
                 toast.success("Department added successfully")
             } else {
                 toast.error("Something went wrong")

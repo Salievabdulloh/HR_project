@@ -12,11 +12,11 @@ const AvgWorkHoursChart = () => {
 
   const { getPayrollmonth, payrollMonthId } = useGetStore()
 
-  const [getMonth, setGetMonth] = useState<number | null>(3)
+  const [getMonth, setGetMonth] = useState<number>(3)
 
   console.log(payrollMonthId);
 
-  const data = payrollMonthId?.data
+  const data = payrollMonthId
 
   const [theme] = useDarkSide()
 

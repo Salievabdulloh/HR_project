@@ -9,12 +9,14 @@ const Card2 = () => {
     const { getVacationSummary, vacation } = useGetStore();
     const [theme] = useDarkSide();
 
-    const data = vacation?.data || [];
     let cnt = 0
-    const vac = data.map((e: any) => e.totalVacationDays);
-    data.map((e: any) => cnt += e.totalVacationDays);
-    const employee = data.map((e: any) => e.employeesOnVacation);
-    const getMonth = data.map((e: any) =>
+
+    console.log(vacation);
+
+    const vac = vacation?.map((e: any) => e.totalVacationDays);
+    vacation?.map((e: any) => cnt += e.totalVacationDays);
+    const employee = vacation?.map((e: any) => e.employeesOnVacation);
+    const getMonth = vacation?.map((e: any) =>
         new Date(`${e?.month}-01`).toLocaleString("en-US", { month: "short" })
     );
 

@@ -38,7 +38,7 @@ const Employee = () => {
         }
     })
 
-    const { employee, getEmployee, registration, getRegister, user: getUser, getUsers, allDepartment, getAllDepartments, allUsers } = useGetStore();
+    const { employee, getEmployee, registration, getRegister, user: getUser, allDepartment, getAllDepartments, allUsers } = useGetStore();
 
     const [search, setSearch] = useState("");
     const [addDialog, setaddDialog] = useState(false);
@@ -51,13 +51,13 @@ const Employee = () => {
     const password = watch("password")
     const password2 = watch("confirmPassword")
 
-    const user = employee?.data;
+    const user = employee;
     const router = useRouter()
     console.log(allUsers);
     const [theme] = useDarkSide()
 
 
-    const SkeletonRow = ({ theme }: { theme: string }) => (
+    const SkeletonRow = ({ theme = "light" }: { theme?: string }) => (
         <Stack direction="column" className="p-3">
             <Stack direction="row" spacing={2} alignItems="center" className="p-3">
                 <Skeleton
@@ -117,13 +117,12 @@ const Employee = () => {
             }
 
             let res = await registration(data)
-            console.log(res);
 
-            if (res) {
+            if (res?.statusCode) {
+                toast.success(`${data.username} has been added`);
                 setaddDialog(false)
-                toast.success(`${data.username} has been added`)
             } else {
-                toast.error(`${data.username} has not been added`)
+                toast.error(`${data.username} has not been added`);
             }
 
         } catch (error) {
@@ -144,9 +143,9 @@ const Employee = () => {
         exit: { opacity: 0 },
     }
 
-    const itemTransition = { type: "spring", stiffness: 400, damping: 30 }
+    // const itemTransition = { type: "spring", stiffness: 400, damping: 30 }
 
-    const dep = allDepartment?.data
+    const dep = allDepartment
 
 
     useEffect(() => {
@@ -281,7 +280,7 @@ const Employee = () => {
                                         initial={{ opacity: 0, scale: 0.98 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.98 }}
-                                        transition={itemTransition}
+                                    // transition={itemTransition}
                                     >
                                         <div className="flex items-start justify-between">
                                             <div className="flex flex-col items-start gap-3">
@@ -365,7 +364,7 @@ const Employee = () => {
                                         <motion.tr
                                             layoutId={`employee-${e.id}`}
                                             key={e.id}
-                                            transition={itemTransition}
+                                            // transition={itemTransition}
                                             className={`
               transition-all duration-200
               ${theme === 'dark' ? idx % 2 === 0

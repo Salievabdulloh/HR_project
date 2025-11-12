@@ -19,7 +19,7 @@ const Payroll = () => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [theme] = useDarkSide();
 
-  const data = payrollData?.data || [];
+  const data = payrollData || [];
 
   useEffect(() => {
     getPayrollRecord();
@@ -32,18 +32,16 @@ const Payroll = () => {
 
   return (
     <div
-      className={`min-h-screen py-10 px-5 md:px-20 transition-all duration-500 ${
-        theme === "dark"
-          ? "bg-linear-to-t from-[#0a0a0f] via-[#0f172a] to-[#172554] text-gray-100"
-          : "bg-linear-to-t from-blue-50 via-white to-blue-100 text-gray-900"
-      }`}
+      className={`min-h-screen py-10 px-5 md:px-20 transition-all duration-500 ${theme === "dark"
+        ? "bg-linear-to-t from-[#0a0a0f] via-[#0f172a] to-[#172554] text-gray-100"
+        : "bg-linear-to-t from-blue-50 via-white to-blue-100 text-gray-900"
+        }`}
     >
       <div className="max-w-5xl mx-auto">
         <div className="flex mb-8 justify-between items-center">
           <div
-            className={`text-3xl font-bold flex items-center gap-3 ${
-              theme === "dark" ? "text-gray-400" : "text-gray-800"
-            }`}
+            className={`text-3xl font-bold flex items-center gap-3 ${theme === "dark" ? "text-gray-400" : "text-gray-800"
+              }`}
           >
             <DollarSign
               className={`${theme === "dark" ? "text-blue-300" : "text-blue-600"}`}
@@ -54,7 +52,7 @@ const Payroll = () => {
 
         {/* Employee Payroll Accordions */}
         <div className="flex flex-col gap-4">
-          {employee?.data?.map((emp: any) => {
+          {employee?.map((emp: any) => {
             const payrolls = data.filter((p) => p.employeeId === emp.id);
 
             return (
@@ -79,9 +77,8 @@ const Payroll = () => {
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <div className="flex justify-between w-full items-center">
                     <Typography
-                      className={`flex items-center gap-2 text-lg font-semibold ${
-                        theme === "dark" ? "text-gray-100" : "text-gray-800"
-                      }`}
+                      className={`flex items-center gap-2 text-lg font-semibold ${theme === "dark" ? "text-gray-100" : "text-gray-800"
+                        }`}
                     >
                       <User size={20} className="text-blue-500" />
                       {emp.firstName} {emp.lastName}
@@ -105,11 +102,10 @@ const Payroll = () => {
                     payrolls.map((p) => (
                       <div
                         key={p.id}
-                        className={`rounded-xl p-4 mb-3 border ${
-                          theme === "dark"
-                            ? "border-gray-700 bg-[#1e293b]"
-                            : "border-gray-200 bg-gray-50"
-                        }`}
+                        className={`rounded-xl p-4 mb-3 border ${theme === "dark"
+                          ? "border-gray-700 bg-[#1e293b]"
+                          : "border-gray-200 bg-gray-50"
+                          }`}
                       >
                         <div className="grid grid-cols-2 gap-y-2 text-sm">
                           <p className="font-medium">Period Start:</p>
@@ -129,9 +125,8 @@ const Payroll = () => {
                     ))
                   ) : (
                     <Typography
-                      className={`italic text-center ${
-                        theme === "dark" ? "text-gray-400" : "text-gray-500"
-                      }`}
+                      className={`italic text-center ${theme === "dark" ? "text-gray-400" : "text-gray-500"
+                        }`}
                     >
                       No payroll record found for this employee.
                     </Typography>

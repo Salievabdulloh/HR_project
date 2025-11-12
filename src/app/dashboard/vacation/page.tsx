@@ -13,14 +13,10 @@ const Vacations = () => {
     const { myVacation, myVacationRecord, getMyVacationRecord, getMyVacation, cancelMyVacation, user, getRegister } = useGetStore();
     const [theme] = useDarkSide()
 
-    const data = myVacation?.data;
-    const myData = myVacationRecord?.data;
+    const data = myVacation;
+    const myData = myVacationRecord;
 
     const [open, setOpen] = useState<boolean>(false)
-
-    const router = useRouter()
-
-    const getUser = user?.data
 
     console.log(myData);
 
@@ -36,16 +32,6 @@ const Vacations = () => {
             console.error(error);
         }
     }
-
-    // if (!getUser) {
-    //     return (
-    //         <div className="flex items-center justify-center h-[60vh]">
-    //             <div className="text-gray-500 flex items-center gap-3 text-lg">Error
-    //                 <Button onClick={() => router.back()}>Go back</Button>
-    //             </div>
-    //         </div>
-    //     );
-    // }
 
     useEffect(() => {
         getMyVacation();
@@ -88,7 +74,7 @@ const Vacations = () => {
                     />
                     <span>
                         Hired on{" "}
-                        {new Date(data?.employee.hireDate).toLocaleDateString("en-US", {
+                        {new Date(String(data?.employee.hireDate)).toLocaleDateString("en-US", {
                             month: "long",
                             day: "numeric",
                             year: "numeric",
@@ -139,13 +125,13 @@ const Vacations = () => {
                     <div>
                         <p className="text-sm text-gray-500">Vacation Period</p>
                         <h3 className="font-medium">
-                            {new Date(data?.periodStart).toLocaleDateString("en-US", {
+                            {new Date(String(data?.periodStart)).toLocaleDateString("en-US", {
                                 month: "short",
                                 day: "numeric",
                                 year: "numeric",
                             })}{" "}
                             →{" "}
-                            {new Date(data?.periodEnd).toLocaleDateString("en-US", {
+                            {new Date(String(data?.periodEnd)).toLocaleDateString("en-US", {
                                 month: "short",
                                 day: "numeric",
                                 year: "numeric",

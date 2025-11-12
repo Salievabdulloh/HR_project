@@ -13,29 +13,29 @@ const ProfileId = () => {
 
     const [editusername, setEditusername] = useState('')
     const [editemail, setEditemail] = useState('')
-    const [editphoneNumber, setEditphoneNumber] = useState('')
+    const [editphoneNumber, setEditphoneNumber] = useState(0)
     const [editbaseSalary, setEditbaseSalary] = useState('')
     const [openEdit, setopenEdit] = useState(false)
     const [openEditDialog, setopenEditDialog] = useState<boolean>(false)
 
 
-    const getData = allUsers?.data?.find(
-        (e) => e.employeeInfo?.id === Number(employeeId)
+    const getData = allUsers?.find(
+        (e) => e?.employeeInfo?.id === Number(employeeId)
     )
 
     const user = getData?.employeeInfo;
 
     function editModal() {
         setopenEdit(true)
-        setEditusername(getData?.username)
-        setEditemail(getData?.email)
-        setEditphoneNumber(getData?.phoneNumber)
+        setEditusername(String(getData?.username))
+        setEditemail(String(getData?.email))
+        setEditphoneNumber(Number(getData?.phoneNumber))
     }
 
     async function edit() {
         try {
             let data = {
-                employeeId: employeeId,
+                employeeId: Number(employeeId),
                 username: editusername,
                 email: editemail,
                 phoneNumber: editphoneNumber,
@@ -50,8 +50,8 @@ const ProfileId = () => {
     async function salary() {
         try {
             let editData = {
-                employeeId: employeeId,
-                baseSalary: editbaseSalary,
+                employeeId: Number(employeeId),
+                baseSalary: Number(editbaseSalary),
             }
             await editSalary(editData)
             setopenEditDialog(false)
@@ -104,7 +104,7 @@ const ProfileId = () => {
                             <div className="text-gray-500">Email:</div>
                             <Input value={editemail} onChange={(e) => setEditemail(e.target.value)} />
                             <div className="text-gray-500">Phone Number:</div>
-                            <Input value={editphoneNumber} onChange={(e) => setEditphoneNumber(e.target.value)} />
+                            <Input value={editphoneNumber} onChange={(e) => setEditphoneNumber(Number(e.target.value))} />
 
                             <div className="text-gray-500">Position:</div>
                             <Input value={user?.position} disabled />

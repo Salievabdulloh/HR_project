@@ -7,43 +7,39 @@ import toast from "react-hot-toast";
 
 const Profile = () => {
     const { user, getRegister, editUser } = useGetStore();
-    console.log();
 
-    const users = user.data
-    const userInfo = users?.employeeInfo
-    console.log(users)
+    const userInfo = user?.employeeInfo
 
     const [editUsername, setEditUsername] = useState("")
-    const [editnumber, setEditnumber] = useState("")
+    const [editnumber, setEditnumber] = useState(0)
     const [editemail, setEditemail] = useState("")
     const [editname, setEditname] = useState("")
     const [editLastName, setEditLastName] = useState("")
     const [editPosition, setEditPosition] = useState("")
     const [editdate, setEditdate] = useState("")
-    const [editsalary, setEditsalary] = useState("")
+    const [editsalary, setEditsalary] = useState(0)
     const [editDepartment, setEditDepartment] = useState("")
 
     useEffect(() => {
-        if (users) {
-            setEditUsername(users.username || "")
-            setEditnumber(users.phoneNumber || "")
-            setEditnumber(users.phoneNumber || "")
-            setEditdate(userInfo.hireDate || "")
-            setEditemail(users.email || "")
-            setEditname(userInfo.firstName || "")
-            setEditLastName(userInfo.lastName || "")
-            setEditPosition(userInfo.position || "")
-            setEditsalary(userInfo.baseSalary || "")
-            setEditDepartment(userInfo.departmentName || "")
+        if (user) {
+            setEditUsername(user.username || "")
+            setEditnumber(user.phoneNumber || 0)
+            setEditdate(user?.employeeInfo.hireDate || "")
+            setEditemail(user.email || "")
+            setEditname(user?.employeeInfo.firstName || "")
+            setEditLastName(user?.employeeInfo.lastName || "")
+            setEditPosition(user?.employeeInfo.position || "")
+            setEditsalary(user?.employeeInfo.baseSalary || 0)
+            setEditDepartment(user?.employeeInfo.departmentName || "")
         }
-    }, [users])
+    }, [user])
 
     async function saveProfile() {
         let edit = {
-            employeeId: userInfo?.id,
+            employeeId: Number(userInfo?.id),
             username: editUsername,
             email: editemail,
-            phoneNumber: editnumber,
+            phoneNumber: Number(editnumber),
         }
         let res = await editUser(edit)
         // if (res) {
@@ -53,21 +49,6 @@ const Profile = () => {
         // }
         toast.success("Your profile has been updated")
     }
-
-    // const [load, setLoad] = useState(false)
-
-    // // async function upload() {
-    // //     try {
-    // //         setLoad(true)
-    // //         await saveProfile()
-    // //     } catch (error) {
-    // //         console.error(error);
-    // //     } finally {
-    // //         setTimeout(() => {
-    // //             setLoad(false)
-    // //         }, 2000)
-    // //     }
-    // // }
 
     if (!user) {
         return <div className="flex items-center">Loading <Loader className="animate-spin" /></div>;
@@ -110,7 +91,7 @@ const Profile = () => {
                             <Input
                                 id="phone"
                                 value={editnumber}
-                                onChange={(e) => setEditnumber(e.target.value)}
+                                onChange={(e) => setEditnumber(Number(e.target.value))}
                                 placeholder="Phone Number"
                             />
                         </div>
@@ -163,7 +144,7 @@ const Profile = () => {
                                 id="base-salary"
                                 disabled
                                 value={editsalary}
-                                onChange={(e) => setEditsalary(e.target.value)}
+                                onChange={(e) => setEditsalary(Number(e.target.value))}
                                 placeholder="Base Salary"
                             />
                         </div>

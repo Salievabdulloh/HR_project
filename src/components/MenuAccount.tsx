@@ -18,7 +18,7 @@ import useDarkSide from '../shared/config/useDarkSide';
 
 export default function MenuAccount() {
     const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef(null);
+    const anchorRef = React.useRef<HTMLButtonElement>(null);
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -48,7 +48,7 @@ export default function MenuAccount() {
 
     const prevOpen = React.useRef(open);
     React.useEffect(() => {
-        if (prevOpen.current === true && open === false) {
+        if (prevOpen.current === true && open === false && anchorRef.current) {
             anchorRef.current.focus();
         }
         prevOpen.current = open;

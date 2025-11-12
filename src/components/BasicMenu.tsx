@@ -27,7 +27,7 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     const [editposition, setEditposition] = React.useState('')
     const [openPayroll, setopenPayroll] = React.useState(false)
     const [editisActive, setEditisActive] = React.useState<boolean>(false)
-    const [editdepartmentName, setEditdepartmentName] = React.useState<number>(1);
+    const [editdepartmentName, setEditdepartmentName] = React.useState<string>('');
     const [edithireDate, setEdithireDate] = React.useState('')
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,9 +44,11 @@ export default function BasicMenu({ employeeId, name, el }: any) {
             setopenModal(false)
             console.log(res);
 
-            if (res) {
+            if (res.statusCode == 200 || res.statusCode == 201) {
                 setIsDeleted(true)
                 toast.success(`${name} deleted successfully`);
+            } else {
+                toast.error(`Sorry couldn't delet the user`);
             }
         } catch (error) {
             console.error(error)
@@ -56,13 +58,13 @@ export default function BasicMenu({ employeeId, name, el }: any) {
     async function editUser() {
         try {
             let edit = {
-                id: employeeId,
+                id: Number(employeeId),
                 firstName: editfirstName,
                 lastName: editLastName,
                 position: editposition,
                 hireDate: edithireDate,
                 isActive: editisActive,
-                departmentId: Number(editdepartmentName),
+                departmentName: String(editdepartmentName),
             }
             await editEmployee(edit)
             setEditDialog(false)
@@ -89,9 +91,9 @@ export default function BasicMenu({ employeeId, name, el }: any) {
         handleClose()
     }
 
-    const data = payrollDataId?.data
+    const data = payrollDataId
 
-    const dep = allDepartment?.data
+    const dep = allDepartment
 
     console.log(data)
 
@@ -177,7 +179,7 @@ export default function BasicMenu({ employeeId, name, el }: any) {
                         <Select.Option value={true}>Active</Select.Option>
                         <Select.Option value={false}>Incative</Select.Option>
                     </Select>
-                    <Select value={editdepartmentName} onChange={(value) => setEditdepartmentName(Number(value))}>
+                    <Select value={editdepartmentName} onChange={(value) => setEditdepartmentName(value)}>
                         {dep?.map(e => (
                             <Select.Option className="cursor-pointer" value={e.id}>{e.name}</Select.Option>
                         ))}

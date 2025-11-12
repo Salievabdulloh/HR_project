@@ -13,7 +13,7 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 const MemberTypeChart = () => {
     const { department, getDepartment } = useGetStore()
 
-    const data = Array.isArray(department?.data) ? department.data : [];
+    const data = department;
 
     const generateColors = (count: number) => {
         const colors = [];
@@ -23,7 +23,7 @@ const MemberTypeChart = () => {
         }
         return colors;
     }
-    
+
     const options_7: ApexOptions = {
         chart: {
             toolbar: { show: false },
@@ -61,7 +61,7 @@ const MemberTypeChart = () => {
             },
         },
     }
-    
+
 
     const series_7 = data?.map(e => e?.employeeCount)
 

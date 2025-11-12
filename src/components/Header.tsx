@@ -71,7 +71,7 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null
   const { user, getRegister } = useGetStore()
-  const getRole = user?.data?.role
+  const getRole = user?.role
   const pathname = usePathname()
   const [theme, toggleTheme] = useDarkSide()
 
@@ -82,8 +82,9 @@ const Header = () => {
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
     { href: '/login', label: 'Login', icon: <LogIn size={18} /> },
-    { href: '/registration', label: 'Sign Up', icon: <UserPlus size={18} /> },
   ]
+
+  if (!theme) return null
 
   return (
     <header
@@ -143,7 +144,7 @@ const Header = () => {
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-        <FormControlLabel control={<MaterialUISwitch sx={{ m: 1 }} />} onClick={toggleTheme} />
+        <FormControlLabel label='' control={<MaterialUISwitch sx={{ m: 1 }} />} onClick={toggleTheme} />
       </div>
 
       <AnimatePresence>
@@ -179,7 +180,7 @@ const Header = () => {
                 </Link>
               ))}
 
-              <FormControlLabel control={<MaterialUISwitch sx={{ m: 1 }} />} onClick={toggleTheme} />
+              <FormControlLabel label='' control={<MaterialUISwitch sx={{ m: 1 }} />} onClick={toggleTheme} />
 
               {token && getRole === 'Employee' ? (
                 <MenuAccount />

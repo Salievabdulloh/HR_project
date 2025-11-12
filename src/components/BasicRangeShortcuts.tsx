@@ -41,7 +41,8 @@ export default function BasicRangeShortcuts({ open, setOpen }: any) {
     const { sendRequest, getMyVacationRecord, user, getRegister } = useGetStore()
 
     const [isChecked, setIsChecked] = useState(false)
-    const [type, settype] = useState('')
+    const [type, settype] = useState('Paid')
+
 
     const startDate = value[0] ? value[0]?.format("YYYY-MM-DD") : ""
     const endDate = value[1] ? value[1]?.format("YYYY-MM-DD") : ""
@@ -67,14 +68,14 @@ export default function BasicRangeShortcuts({ open, setOpen }: any) {
         setValue(newValue)
     }
 
-    const myId = user?.data?.employeeInfo?.id
+    const myId = user?.employeeInfo?.id
 
     console.log(myId);
 
     async function postMessage() {
         try {
             let data = {
-                employeeId: myId,
+                employeeId: Number(myId),
                 startDate: String(startDate),
                 endDate: String(endDate),
                 type: type,
@@ -83,11 +84,6 @@ export default function BasicRangeShortcuts({ open, setOpen }: any) {
 
             let res = await sendRequest(data)
             toast.success("Your message has been sent to your manager. PLease wait his response")
-            // if (res) {
-            // }
-            // else {
-            //     toast.error("Your message has been sent to your manager. PLease wait his response")
-            // }
         } catch (error) {
             console.error(error);
         }
@@ -155,7 +151,7 @@ export default function BasicRangeShortcuts({ open, setOpen }: any) {
                         <div className="gap-3 mt-4 flex-col flex">
                             <select value={type} onChange={(e) => settype(e.target.value)}>
                                 <option value='Paid'>Paid</option>
-                                <option selected value='Unpaid'>Unpaid</option>
+                                <option value='Unpaid'>Unpaid</option>
                             </select>
                         </div>
                         <div onClick={() => setIsChecked(!isChecked)} className='flex cursor-pointer mt-10 mb-4 items-center gap-4'>
@@ -170,8 +166,6 @@ export default function BasicRangeShortcuts({ open, setOpen }: any) {
                     </div>
                 </div>
             </Box>
-
         </Modal>
-
-    );
+    )
 }

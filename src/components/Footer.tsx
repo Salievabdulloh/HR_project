@@ -8,6 +8,8 @@ const Footer = () => {
   const year = new Date().getFullYear()
   const [theme] = useDarkSide()
 
+  if (!theme) return null
+
   return (
     <footer className={`ml-[18%] ${theme === 'dark' ? 'bg-[#0f172a] text-gray-200' : 'bg-linear-to-r from-blue-50 via-white to-blue-50 text-gray-700'} border-t border-gray-300`}>
       <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row justify-between items-center gap-6">
