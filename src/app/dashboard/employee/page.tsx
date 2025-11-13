@@ -305,9 +305,7 @@ const Employee = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                {getUser?.length == 0 && (
-                                                    <BasicMenu name={e.firstName} employeeId={e.id} el={e} />
-                                                )}
+                                                <BasicMenu name={e.firstName} employeeId={e.id} el={e} />
                                             </div>
                                         </div>
 
