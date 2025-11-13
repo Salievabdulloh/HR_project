@@ -76,11 +76,11 @@ const Departments = () => {
 
   async function addNewDep() {
     try {
-      const add = {
+      let add: any = {
         name: addName,
         description: addDescription,
-      };
-      await addDepartmentEmployees(add);
+      }
+      let res = await addDepartmentEmployees(add)
       toast.success("Department added successfully");
       setaddDialog(false);
       setaddName("");
@@ -97,24 +97,21 @@ const Departments = () => {
   return (
     <div
       className={`min-h-screen w-full py-10 px-4 sm:px-6 md:px-10 lg:px-20 overflow-hidden transition-all duration-500
-      ${
-        theme === "dark"
+      ${theme === "dark"
           ? "bg-gradient-to-b from-[#0a0a0f] via-[#0f172a] to-[#172554] text-gray-100"
           : "bg-gradient-to-b from-blue-50 via-white to-blue-100 text-gray-900"
-      }`}
+        }`}
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row mb-8 justify-between items-start sm:items-center gap-4">
           <div
-            className={`text-3xl font-bold flex items-center gap-3 ${
-              theme === "dark" ? "text-gray-300" : "text-gray-800"
-            }`}
+            className={`text-3xl font-bold flex items-center gap-3 ${theme === "dark" ? "text-gray-300" : "text-gray-800"
+              }`}
           >
             <Building2
-              className={`${
-                theme === "dark" ? "text-blue-300" : "text-blue-600"
-              }`}
+              className={`${theme === "dark" ? "text-blue-300" : "text-blue-600"
+                }`}
               size={30}
             />
             <h2>Departments</h2>
@@ -149,10 +146,9 @@ const Departments = () => {
                     setExpandedId(isExpanded ? null : dept.id)
                   }
                   className={`rounded-2xl overflow-hidden shadow-md border hover:shadow-lg transition-all duration-300 
-                    ${
-                      theme === "dark"
-                        ? "bg-[#0f172a]! text-white! border-gray-700"
-                        : "bg-white border-gray-100"
+                    ${theme === "dark"
+                      ? "bg-[#0f172a]! text-white! border-gray-700"
+                      : "bg-white border-gray-100"
                     }`}
                   sx={{
                     backgroundColor: theme === "dark" ? "#0f172a" : "#ffffff",
@@ -175,19 +171,17 @@ const Departments = () => {
                   <AccordionSummary
                     expandIcon={
                       <ExpandMoreIcon
-                        className={`text-blue-600 transition-transform duration-200 ${
-                          isHovered || isExpanded ? "rotate-180" : ""
-                        }`}
+                        className={`text-blue-600 transition-transform duration-200 ${isHovered || isExpanded ? "rotate-180" : ""
+                          }`}
                       />
                     }
                   >
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-2">
                       <Typography
-                        className={`text-lg font-semibold flex items-center gap-2 ${
-                          theme === "dark"
-                            ? "text-white"
-                            : "text-gray-800"
-                        }`}
+                        className={`text-lg font-semibold flex items-center gap-2 ${theme === "dark"
+                          ? "text-white"
+                          : "text-gray-800"
+                          }`}
                       >
                         <Users
                           className="text-blue-600"
@@ -196,9 +190,8 @@ const Departments = () => {
                         {dept.name}
                       </Typography>
                       <Chip
-                        label={`${dept.employees.length} Employee${
-                          dept.employees.length !== 1 ? "s" : ""
-                        }`}
+                        label={`${dept.employees.length} Employee${dept.employees.length !== 1 ? "s" : ""
+                          }`}
                         color="primary"
                         variant="outlined"
                         size="small"
@@ -207,18 +200,16 @@ const Departments = () => {
                   </AccordionSummary>
 
                   <AccordionDetails
-                    className={`${
-                      theme === "dark"
-                        ? "bg-gray-800 text-white"
-                        : "bg-gray-50"
-                    }`}
+                    className={`${theme === "dark"
+                      ? "bg-gray-800 text-white"
+                      : "bg-gray-50"
+                      }`}
                   >
                     <Typography
-                      className={`mb-2 ${
-                        theme === "dark"
-                          ? "text-gray-300"
-                          : "text-gray-700"
-                      }`}
+                      className={`mb-2 ${theme === "dark"
+                        ? "text-gray-300"
+                        : "text-gray-700"
+                        }`}
                     >
                       {dept.description}
                     </Typography>
@@ -230,10 +221,9 @@ const Departments = () => {
                           <div
                             key={emp.id}
                             className={`p-4 border rounded-xl shadow-sm hover:shadow-md transition duration-300
-                              ${
-                                theme === "dark"
-                                  ? "bg-gray-700 border-gray-600 text-white"
-                                  : "bg-gray-50 border-gray-200"
+                              ${theme === "dark"
+                                ? "bg-gray-700 border-gray-600 text-white"
+                                : "bg-gray-50 border-gray-200"
                               }`}
                           >
                             <div className="flex items-center justify-between mb-2">
@@ -241,11 +231,10 @@ const Departments = () => {
                                 {emp.firstName} {emp.lastName}
                               </h3>
                               <span
-                                className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                  emp.isActive
-                                    ? "bg-green-100 text-green-600"
-                                    : "bg-red-100 text-red-600"
-                                }`}
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${emp.isActive
+                                  ? "bg-green-100 text-green-600"
+                                  : "bg-red-100 text-red-600"
+                                  }`}
                               >
                                 {emp.isActive ? "Active" : "Inactive"}
                               </span>
