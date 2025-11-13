@@ -13,6 +13,7 @@ import { useGetStore } from "../store/store";
 import useDarkSide from "../shared/config/useDarkSide";
 import { Input, Modal, Select } from "antd";
 import { CheckRounded } from "@mui/icons-material";
+import { useTheme } from "next-themes";
 
 const MemberList: React.FC = () => {
 
@@ -58,7 +59,7 @@ const MemberList: React.FC = () => {
         }
     }
 
-    const [theme] = useDarkSide()
+    const { theme, setTheme } = useTheme()
 
     const filteredData = data?.filter((e) => {
         if (!status) return true; // no filter applied
@@ -85,8 +86,6 @@ const MemberList: React.FC = () => {
                         <option value="viewed">Viewed</option>
                         <option value="unviewed">Unviewed</option>
                     </select>
-                    <Button icon={<Filter size={16} />} text="Filter" />
-                    <SeeAll />
                 </div>
             </div>
             <Modal

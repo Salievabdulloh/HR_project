@@ -7,11 +7,12 @@ import { Button, } from "antd";
 import { useRouter } from "next/navigation";
 import { TableBody, Modal, Box } from "@mui/material";
 import BasicRangeShortcuts from "@/src/components/BasicRangeShortcuts";
+import { useTheme } from 'next-themes'
 
 
 const Vacations = () => {
     const { myVacation, myVacationRecord, getMyVacationRecord, getMyVacation, cancelMyVacation, user, getRegister } = useGetStore();
-    const [theme] = useDarkSide()
+    const { theme, setTheme } = useTheme()
 
     const data = myVacation;
     const myData = myVacationRecord;

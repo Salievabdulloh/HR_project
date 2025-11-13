@@ -5,6 +5,7 @@ import { Calendar, ArrowDown } from 'lucide-react';
 import { Select } from 'antd';
 import { useGetStore } from '../store/store';
 import useDarkSide from '../shared/config/useDarkSide';
+import { useTheme } from 'next-themes';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -18,7 +19,7 @@ const AvgWorkHoursChart = () => {
 
   const data = payrollMonthId
 
-  const [theme] = useDarkSide()
+  const { theme, setTheme } = useTheme()
 
   const options_2 = {
     chart: {

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import useDarkSide from '@/src/shared/config/useDarkSide'
 import { styled } from '@mui/material/styles'
+import { useTheme } from 'next-themes'
 
 const Login = () => {
   const { register, watch, handleSubmit, formState: { errors } } = useForm({
@@ -19,7 +20,7 @@ const Login = () => {
   const [openEye, setOpenEye] = useState(false)
   const password = watch('password')
 
-  const [theme] = useDarkSide()
+  const { theme, setTheme } = useTheme()
 
   async function onSubmit(data: any) {
     try {

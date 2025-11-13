@@ -1,19 +1,23 @@
 'use client';
 import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { MoreHorizontal } from 'lucide-react';
-import type { ApexOptions } from 'apexcharts';
-import SeeAll from './SeaAll';
-import { useGetStore } from '../store/store';
-import useDarkSide from '../shared/config/useDarkSide';
 import Link from 'next/link';
+import type { ApexOptions } from 'apexcharts';
+import { useGetStore } from '../store/store';
+import SeeAll from './SeaAll';
+import { useTheme } from 'next-themes';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const MemberTypeChart = () => {
-    const { department, getDepartment } = useGetStore()
+    const { department, getDepartment } = useGetStore();
+    const { theme } = useTheme();
 
-    const data = department;
+    useEffect(() => {
+        getDepartment();
+    }, []);
+
+    const data = department || [];
 
     const generateColors = (count: number) => {
         const colors = [];
@@ -22,65 +26,66 @@ const MemberTypeChart = () => {
             colors.push(`hsl(${hue}, 70%, 50%)`);
         }
         return colors;
-    }
+    };
+
+    const colors = generateColors(data.length);
+    const series_7 = data.map(e => e?.employeeCount);
 
     const options_7: ApexOptions = {
         chart: {
             toolbar: { show: false },
-            width: 600,
         },
         legend: {
-            position: 'right',
-            fontSize: '14px',
-            labels: { colors: '#6B7280' },
+            show: false, 
         },
         dataLabels: { enabled: true },
-        colors: generateColors(data?.length || 0), // ✅ dynamic color palette
-        responsive: [
-            {
-                breakpoint: 1024,
-                options: {
-                    chart: { width: 500 },
-                    legend: { position: 'bottom' },
-                },
-            },
-            {
-                breakpoint: 640,
-                options: {
-                    chart: { width: 350 },
-                    legend: { position: 'bottom' },
-                },
-            },
-        ],
-        labels: data?.map(e => e.name),
+        colors,
+        labels: data.map(e => e.name),
         plotOptions: {
             pie: {
                 donut: {
-                    size: '60%',
+                    size: '65%',
                 },
             },
         },
-    }
-
-
-    const series_7 = data?.map(e => e?.employeeCount)
-
-    const [theme] = useDarkSide()
-
-    useEffect(() => { getDepartment() }, [])
+        responsive: [
+            {
+                breakpoint: 640,
+                options: { chart: { width: 300 } },
+            },
+        ],
+    };
 
     return (
-        <div className={`rounded-[20px] md:h-[475px] w-[475px] ${theme === 'dark' ? "bg-[#0f172a]" : "bg-white"} p-6 shadow-md flex flex-col items-center`}>
+        <div
+            className={`rounded-[20px] md:h-[475px] p-6 shadow-md flex flex-col justify-start items-center 
+      ${theme === 'dark' ? 'bg-[#0f172a] text-gray-200' : 'bg-white text-gray-800'}`}
+        >
             <div className="flex justify-between items-center w-full mb-4">
                 <h2 className="font-medium text-[20px]">Department</h2>
-                <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700 text-sm">
-                    <Link href="/dashboard/departments">
-                        <SeeAll />
-                    </Link>
-                </button>
+                <Link href="/dashboard/departments">
+                    <SeeAll />
+                </Link>
             </div>
-            <div className="w-full flex justify-center">
-                <Chart options={options_7} series={series_7} type="donut" height={400} width={500} />
+
+            <div className="flex justify-center w-full mb-6">
+                <Chart options={options_7} series={series_7} type="donut" height={280} />
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-auto w-full">
+                {data.map((item, i) => (
+                    <div
+                        key={item.name}
+                        className="flex items-center gap-2 text-sm"
+                    >
+                        <div
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: colors[i] }}
+                        />
+                        <span className="truncate">{item.name}</span>
+                        <span className="ml-auto font-semibold">{item.employeeCount}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );

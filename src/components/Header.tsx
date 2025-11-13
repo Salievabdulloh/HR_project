@@ -5,11 +5,13 @@ import { useGetStore } from '../store/store'
 import MenuAccount from '@/src/components/MenuAccount'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { LogIn, UserPlus, LayoutDashboard, Menu, X } from 'lucide-react'
+import { LogIn, UserPlus, LayoutDashboard, Menu, X, Sun, Moon } from 'lucide-react'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { styled } from '@mui/material/styles'
 import Switch from '@mui/material/Switch'
-import useDarkSide from '@/src/shared/config/useDarkSide'
+// import useDarkSide from '@/src/shared/config/useDarkSide'
+import { useTheme } from 'next-themes'
+import { Button } from 'antd'
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -68,23 +70,29 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }))
 
 const Header = () => {
-  const [mobileOpen, setMobileOpen] = useState(false)
   const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null
-  const { user, getRegister } = useGetStore()
+  const { user, getRegister, setOpenModal, openModal } = useGetStore()
   const getRole = user?.role
   const pathname = usePathname()
-  const [theme, toggleTheme] = useDarkSide()
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    getRegister()
+    setMounted(true)
   }, [])
+
+  if (!mounted) {
+    return <header className="h-16 w-full border-b bg-transparent" />
+  }
+
+  // useEffect(() => {
+  //   getRegister()
+  // }, [])
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
     { href: '/login', label: 'Login', icon: <LogIn size={18} /> },
   ]
-
-  if (!theme) return null
 
   return (
     <header
@@ -102,7 +110,7 @@ const Header = () => {
           <Link href="/">HR<span className={`${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>Project</span></Link>
         </motion.div>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="md:flex items-center gap-6">
           {navItems.map(({ href, label, icon }) => (
             <Link
               key={href}
@@ -133,74 +141,25 @@ const Header = () => {
                   ? 'bg-blue-500 hover:bg-blue-600 text-white'
                   : 'bg-blue-600 hover:bg-blue-700 text-white'
                 }`}
-            >
-              Get Started
-            </Link>
+            >Get Started</Link>
           )}
           <button
             className={`md:hidden transition ${theme === 'dark' ? 'text-gray-200 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'}`}
-            onClick={() => setMobileOpen(!mobileOpen)}
+            // onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={() => setOpenModal(!openModal)}
           >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {openModal ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-        <FormControlLabel label='' control={<MaterialUISwitch sx={{ m: 1 }} />} onClick={toggleTheme} />
+        <div className='hidden md:block'>
+          <FormControlLabel
+            label=""
+            control={<MaterialUISwitch sx={{ m: 1 }} />}
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            style={{ display: mounted ? 'inline-flex' : 'none' }}
+          />
+        </div>
       </div>
-
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className={`${theme === 'dark'
-              ? 'bg-[#1e293b]/95 text-gray-100 border-gray-700'
-              : 'bg-white/95 text-gray-800 border-gray-200'
-              } md:hidden backdrop-blur-md border-t shadow-lg`}
-          >
-            <div className="flex flex-col px-6 py-4 space-y-4">
-              {navItems.map(({ href, label, icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2 text-[16px] transition-all duration-150 
-                    ${pathname === href
-                      ? theme === 'dark'
-                        ? 'text-blue-400 font-semibold'
-                        : 'text-blue-700 font-semibold'
-                      : theme === 'dark'
-                        ? 'text-gray-300 hover:text-blue-400'
-                        : 'text-gray-700 hover:text-blue-600'
-                    }`}
-                >
-                  {icon}
-                  {label}
-                </Link>
-              ))}
-
-              <FormControlLabel label='' control={<MaterialUISwitch sx={{ m: 1 }} />} onClick={toggleTheme} />
-
-              {token && getRole === 'Employee' ? (
-                <MenuAccount />
-              ) : (
-                <Link
-                  href="/login"
-                  onClick={() => setMobileOpen(false)}
-                  className={`w-full text-center py-2 rounded-lg transition-all
-                    ${theme === 'dark'
-                      ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
-                >
-                  Get Started
-                </Link>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
   )
 }

@@ -4,10 +4,11 @@ import SeeAll from "@/src/components/SeaAll";
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useGetStore } from '../store/store';
 import useDarkSide from '../shared/config/useDarkSide';
+import { useTheme } from 'next-themes';
 
 const Card2 = () => {
     const { getVacationSummary, vacation } = useGetStore();
-    const [theme] = useDarkSide();
+    const { theme, setTheme } = useTheme()
 
     let cnt = 0
 

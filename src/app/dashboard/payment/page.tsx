@@ -6,17 +6,18 @@ import { ArrowUpRight, ArrowDownRight, DollarSign, Save, Check, X } from 'lucide
 import useDarkSide from '@/src/shared/config/useDarkSide'
 import { Input, Modal } from 'antd';
 import toast from 'react-hot-toast';
+import { useTheme } from 'next-themes';
 
 const Payment = () => {
     const { payments, getPayments, salaryHistory, editSalaryHistory, getSalaryHistory } = useGetStore()
-    
+
     const data = payments || []
-    const [theme] = useDarkSide()
+    const { theme, setTheme } = useTheme()
 
     const [editDialog, setEditDialog] = useState(false)
     const [percent, setpercent] = useState<number>(0)
     const [id, setid] = useState<number>(0)
-    
+
 
     function getElement(getId: number) {
         setEditDialog(true)

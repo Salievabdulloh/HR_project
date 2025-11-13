@@ -15,6 +15,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useGetStore } from '../store/store';
 import useDarkSide from '../shared/config/useDarkSide';
+import { useTheme } from 'next-themes';
 
 export default function MenuAccount() {
     const [open, setOpen] = React.useState(false);
@@ -28,7 +29,7 @@ export default function MenuAccount() {
 
     const getToken = localStorage.getItem('access_token')
 
-    const [theme] = useDarkSide()
+    const { theme, setTheme } = useTheme()
 
     const handleClose = (event: any) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -73,7 +74,7 @@ export default function MenuAccount() {
                     aria-haspopup="true"
                     onClick={handleToggle}
                 >
-                    <UserCircle2 size={30} color='black' />
+                    <UserCircle2 size={30} color={`${theme == "dark" ? "white" : "black"}`} />
                 </Button>
                 <Popper
                     open={open}

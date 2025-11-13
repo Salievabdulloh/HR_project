@@ -11,6 +11,7 @@ import MemberList from '@/src/components/MemberList'
 import Card2 from '@/src/components/Card'
 import useDarkSide from '@/src/shared/config/useDarkSide'
 import { useGetStore } from '@/src/store/store'
+import { useTheme } from 'next-themes'
 
 const Dashboard = () => {
 
@@ -22,12 +23,12 @@ const Dashboard = () => {
     const [search, setSearch] = useState<string>("")
     const [status, setstatus] = useState<string>("")
     const { getAllVacations, vacationAll } = useGetStore()
-    const [theme] = useDarkSide()
+    const { theme, setTheme } = useTheme()
 
     useEffect(() => { getAllVacations(status) }, [status])
 
     return (
-        <div className={`p-5 px-[15px] md:px-0 ${theme === 'dark' ? 'bg-[#0b1121]' : 'bg-gray-50'} min-h-screen`}>
+        <div className={`p-5 px-[15px] ${theme === 'dark' ? 'bg-[#0b1121]' : 'bg-gray-50'} min-h-screen`}>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-5 relative">
                 <div className="relative w-full md:w-[300px]">
                     <input
@@ -64,18 +65,15 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* Right column */}
                 <div className="flex flex-col gap-5 w-full">
                     <MemberTypeChart />
 
-                    {/* Vacation list */}
-                    <div className={`rounded-[20px] overflow-y-auto max-h-[500px] ${theme === 'dark' ? 'bg-[#0f172a]' : 'bg-[#ffffff]'} py-5`}>
+                    <div className={`rounded-[20px] overflow-y-auto overflow-hidden max-h-[500px] ${theme === 'dark' ? 'bg-[#0f172a]' : 'bg-[#ffffff]'} py-5`}>
                         <div className="px-5">
                             <div className="flex justify-between items-center mb-4">
                                 <h2 className="font-medium text-[20px]">Schedule</h2>
                             </div>
 
-                            {/* Status select */}
                             <select
                                 value={status}
                                 onChange={(e) => setstatus(e.target.value)}
@@ -131,7 +129,6 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Member List */}
             <div className="mt-5">
                 <MemberList />
             </div>

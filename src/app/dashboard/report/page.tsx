@@ -5,6 +5,7 @@ import { FileTextOutlined, DownloadOutlined } from '@ant-design/icons'
 import React, { useState } from 'react'
 import useDarkSide from '@/src/shared/config/useDarkSide'
 import dayjs from 'dayjs'
+import { useTheme } from 'next-themes'
 
 const { RangePicker } = DatePicker
 
@@ -17,7 +18,7 @@ const Report = () => {
         getReportsDepartment,
     } = useGetStore()
 
-    const [theme] = useDarkSide()
+    const { theme, setTheme } = useTheme()
     const [messageApi, contextHolder] = message.useMessage()
     const [messageApi2, contextHolder2] = message.useMessage()
 

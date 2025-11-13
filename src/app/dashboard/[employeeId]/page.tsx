@@ -5,11 +5,13 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Input } from "antd";
+import { useTheme } from "next-themes";
 
 const ProfileId = () => {
     const { employeeId } = useParams();
     const { allUsers, getUsersAll, editUsers, editSalary, getSalaryHistory } = useGetStore();
 
+  const { theme, setTheme } = useTheme()
 
     const [editusername, setEditusername] = useState('')
     const [editemail, setEditemail] = useState('')

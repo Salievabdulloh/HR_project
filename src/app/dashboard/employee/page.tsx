@@ -1,19 +1,19 @@
 "use client"
 import { Bell, DollarSign, Filter, Info, Loader, UserCircle2, WifiOff, Grid, List, EyeOff, Eye } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import Button from "@/src/components/Button";
 import { useGetStore } from "@/src/store/store";
 import { useRouter } from "next/navigation";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import BasicMenu from "@/src/components/BasicMenu";
-import { Input, Modal, Select } from "antd";
+import { Input, Modal, Button } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { error } from "console";
 import useDarkSide from "@/src/shared/config/useDarkSide";
+import { useTheme } from "next-themes";
 
 const Employee = () => {
 
@@ -26,13 +26,13 @@ const Employee = () => {
         defaultValues: {
             username: "",
             email: "",
-            phone: "909090909",
-            password: "pleaseLetmein.7",
-            confirmPassword: "pleaseLetmein.7",
-            baseSalary: '2000',
-            position: 'Junior',
+            phone: "",
+            password: "",
+            confirmPassword: "",
+            baseSalary: '',
+            position: '',
             departmentId: 0,
-            userRole: 'Employee',
+            userRole: '',
             firstName: '',
             lastName: '',
         }
@@ -54,7 +54,7 @@ const Employee = () => {
     const user = employee;
     const router = useRouter()
     console.log(allUsers);
-    const [theme] = useDarkSide()
+    const { theme, setTheme } = useTheme()
 
 
     const SkeletonRow = ({ theme = "light" }: { theme?: string }) => (
@@ -235,10 +235,8 @@ const Employee = () => {
                             </button>
                         </div>
 
-                        <Button icon={<Filter />} text="Filter" />
-                        <button onClick={() => setaddDialog(true)} className="text-white px-6 py-2 rounded bg-[hsl(20,100%,50%)] hover:bg-[hsl(20,100%,45%)]">
-                            Add Candidate
-                        </button>
+                        {/* <Button icon={<Filter />} text="Filter" /> */}
+                        <Button onClick={() => setaddDialog(true)}>Add Employee</Button>
                     </div>
                 </div>
             </div>
@@ -251,7 +249,7 @@ const Employee = () => {
                     {viewMode === "cards" ? (
                         <motion.div
                             key="cards"
-                            className="grid grid-cols-3 gap-5"
+                            className="grid md:grid-cols-3 gap-5"
                             initial="initial"
                             animate="enter"
                             exit="exit"
@@ -430,7 +428,7 @@ const Employee = () => {
                             type="text"
                             {...register("username", { required: true })}
                             placeholder="Username"
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                            className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
                         />
                         {errors.username && <p className="text-red-500 text-sm">First username is required</p>}
                     </div>
@@ -440,7 +438,7 @@ const Employee = () => {
                                 type="email"
                                 {...register("email", { required: true })}
                                 placeholder="Email"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.email && <p className="text-red-500 text-sm">Email is required</p>}
                         </div>
@@ -451,7 +449,7 @@ const Employee = () => {
                                     required: true
                                 })}
                                 placeholder="Phone +992"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.phone && <p className="text-red-500 text-sm">Phone is required</p>}
                         </div>
@@ -462,7 +460,7 @@ const Employee = () => {
                                     required: true
                                 })}
                                 placeholder="BaseSalary"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.baseSalary && <p className="text-red-500 text-sm">BaseSalary is required</p>}
                         </div>
@@ -471,7 +469,7 @@ const Employee = () => {
                                 {...register("departmentId", {
                                     required: true
                                 })}
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none">
                                 {dep?.map(e => (
                                     <option className="cursor-pointer" value={e.id}>{e.name}</option>
                                 ))}
@@ -484,7 +482,7 @@ const Employee = () => {
                                 {...register("userRole", {
                                     required: true
                                 })}
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none">
                                 <option value="Employee">Employee</option>
                                 <option value="HR">HR</option>
                             </select>
@@ -495,7 +493,7 @@ const Employee = () => {
                                 {...register("position", {
                                     required: true
                                 })}
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none">
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none">
                                 <option value="Intern">Intern</option>
                                 <option value="Junior">Junior</option>
                                 <option value="Middle">Middle</option>
@@ -510,7 +508,7 @@ const Employee = () => {
                                     required: true
                                 })}
                                 placeholder="FirstName"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.firstName && <p className="text-red-500 text-sm">FirstName is required</p>}
                         </div>
@@ -521,7 +519,7 @@ const Employee = () => {
                                     required: true
                                 })}
                                 placeholder="LastName"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             {errors.lastName && <p className="text-red-500 text-sm">LastName is required</p>}
                         </div>
@@ -555,7 +553,7 @@ const Employee = () => {
                                     },
                                 })}
                                 placeholder="Password"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             <span
                                 className="top-2 right-3 absolute cursor-pointer"
@@ -600,7 +598,7 @@ const Employee = () => {
                                     },
                                 })}
                                 placeholder="Confirm Password"
-                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                                className="w-full px-4 py-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
                             />
                             <span
                                 className="top-2 right-3 absolute cursor-pointer"

@@ -2,7 +2,6 @@ import { create } from 'zustand'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import api from '../lib/api'
-import { StringDecoder } from 'node:string_decoder'
 
 interface RegisterData {
     username?: string
@@ -381,6 +380,8 @@ interface SalaryData {
 
 interface GetStore {
     user: MyRegisterData | null
+    openModal: boolean
+    setOpenModal: (value: boolean) => void
     setUser: (user: MyRegisterData) => void
     allUsers: AllEmployeesUser[]
     employee: EmployeeDate[]
@@ -472,6 +473,8 @@ export const useGetStore = create<GetStore>((set, get) => ({
     myVacationRecord: [],
     vacationAll: [],
     payrollDataId: [],
+    openModal: false,
+    setOpenModal: (value) => set({ openModal: value }),
 
     getRegister: async () => {
         try {

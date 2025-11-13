@@ -12,12 +12,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DollarSign, User } from "lucide-react";
 import { useGetStore } from "@/src/store/store";
 import useDarkSide from "@/src/shared/config/useDarkSide";
+import { useTheme } from "next-themes";
 
 const Payroll = () => {
   const { payrollData, getPayrollRecord, employee, getEmployee } = useGetStore();
 
   const [expandedId, setExpandedId] = useState<number | null>(null);
-  const [theme] = useDarkSide();
+  const { theme, setTheme } = useTheme()
 
   const data = payrollData || [];
 
