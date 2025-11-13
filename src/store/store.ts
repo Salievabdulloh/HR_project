@@ -261,6 +261,27 @@ interface showAllDepartment {
     employeeCount: number
 }
 
+interface VacationAllData {
+    id: number
+    employeeId: number
+    employee: {
+        id: number
+        firstName: string
+        lastName: string
+        position: string
+        hireDate: string
+        baseSalary: number
+        isActive: boolean
+        departmentName: string
+    }
+    startDate: string
+    endDate: string
+    type: string
+    status: string
+    daysCount: number
+    paymentAmount: any
+}
+
 interface AllEmployeesUser {
     employeeId: number
     username: string
@@ -298,7 +319,6 @@ interface RegistrationResponse {
     errors: any;
     data: string;
 }
-
 interface DeleteEmployeeResponse {
     statusCode: number,
     message: string,
@@ -380,7 +400,7 @@ interface GetStore {
     payments: paymentsData[]
     payrollId: []
     myVacationRecord: VacationRecordData[]
-    vacationAll: []
+    vacationAll: VacationAllData[]
     salaryAll: SalaryAllData[]
     payrollDataId: GetPayrollUsersId[]
 
@@ -421,7 +441,7 @@ interface GetStore {
     getMyVacationRecord: () => Promise<void>
     addCommentSalary: (data: addComment) => Promise<void>
     editSalary: (data: EditOneSalary) => Promise<void>
-    getAllVacations: () => Promise<void>
+    getAllVacations: (status: string) => Promise<void>
     cancelMyVacation: (data: editMyVacationRecord) => Promise<void>
     sendRequest: (data: Send) => Promise<void>
     getPayrollRecordById: (id: number) => Promise<void>
@@ -791,10 +811,12 @@ export const useGetStore = create<GetStore>((set, get) => ({
             console.error(error)
         }
     },
-    getAllVacations: async () => {
+    getAllVacations: async (status) => {
         try {
-            let { data } = await api.get(`/vacation/get_all`)
-            set(() => ({ vacationAll: data }))
+            let { data } = await api.get(`/vacation/get_all`, {
+                params: status ? { vacationStatus: status } : {}
+            })
+            set(() => ({ vacationAll: data.data }))
         } catch (error) {
             console.error(error)
         }

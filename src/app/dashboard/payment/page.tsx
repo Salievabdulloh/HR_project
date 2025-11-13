@@ -9,12 +9,14 @@ import toast from 'react-hot-toast';
 
 const Payment = () => {
     const { payments, getPayments, salaryHistory, editSalaryHistory, getSalaryHistory } = useGetStore()
+    
     const data = payments || []
     const [theme] = useDarkSide()
 
     const [editDialog, setEditDialog] = useState(false)
     const [percent, setpercent] = useState<number>(0)
     const [id, setid] = useState<number>(0)
+    
 
     function getElement(getId: number) {
         setEditDialog(true)

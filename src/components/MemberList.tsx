@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useGetStore } from "../store/store";
 import useDarkSide from "../shared/config/useDarkSide";
-import { Input, Modal } from "antd";
+import { Input, Modal, Select } from "antd";
 import { CheckRounded } from "@mui/icons-material";
 
 const MemberList: React.FC = () => {
@@ -42,6 +42,8 @@ const MemberList: React.FC = () => {
         }
     }
 
+    const [status, setStatus] = useState("")
+
     async function add() {
         try {
             let data = {
@@ -58,6 +60,11 @@ const MemberList: React.FC = () => {
 
     const [theme] = useDarkSide()
 
+    const filteredData = data?.filter((e) => {
+        if (!status) return true; // no filter applied
+        return status === "viewed" ? e.isViewed : !e.isViewed;
+    });
+
     useEffect(() => {
         getSalaryAnomoly()
         getSalaryAnomalyAll()
@@ -69,7 +76,15 @@ const MemberList: React.FC = () => {
             <div className="flex items-center mb-6 justify-between">
                 <h2 className={`font-semibold text-[22px] ${theme === 'dark' ? "text-gray-300" : " text-gray-800"}`}>Salary Anomoly</h2>
                 <div className="flex items-center gap-2">
-                    <Button icon={<ArrowDownUp size={16} />} text="Sort" />
+                    <select
+                        className={`border px-3 py-2 rounded-lg ${theme === 'dark' ? 'bg-[#1e293b] text-gray-200 border-gray-700' : 'bg-gray-100 text-gray-800 border-gray-300'
+                            }`}
+                        value={status}
+                        onChange={(option) => setStatus(option.target.value)}>
+                        <option value="">All</option>
+                        <option value="viewed">Viewed</option>
+                        <option value="unviewed">Unviewed</option>
+                    </select>
                     <Button icon={<Filter size={16} />} text="Filter" />
                     <SeeAll />
                 </div>
@@ -200,7 +215,7 @@ const MemberList: React.FC = () => {
 
                     </thead>
                     <tbody className={`${theme == 'dark' ? "text-gray-400" : "text-gray-700"} text-sm`}>
-                        {data && data?.map((item, idx) => (
+                        {filteredData?.map((item, idx) => (
                             <tr
                                 key={item?.id}
                                 className={`

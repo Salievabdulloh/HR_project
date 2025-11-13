@@ -2,6 +2,7 @@
 import useDarkSide from '@/src/shared/config/useDarkSide'
 import { useGetStore } from '@/src/store/store'
 import { Report, Wallet } from '@mui/icons-material'
+import { Button } from 'antd'
 import { Briefcase, Calendar, CardSim, CircleSlash, Compass, DollarSign, File, FileSearch, FileText, HelpCircle, Layers, LucideBriefcaseBusiness, Settings, Users, WalletCards } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -42,43 +43,49 @@ const layout: React.FC<layoutProps> = ({ children }) => {
 
     console.log(getName);
 
+    const [openModal, setOpenModal] = useState(true)
+
 
     return (
-        <div className='flex'>
-            <div className={`p-5 z-10 w-[18%] fixed h-screen ${theme === 'dark' ? "bg-[black]" : "bg-white"} flex flex-col gap-[15px]`}>
-                <div className='text-[14px] mb-3 text-[#b4b4b4]'>MAIN</div>
-                <div className="">
-                    {items.map(e => (
-                        <Link
-                            key={e.id}
-                            href={e.path}
-                            className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium 
+        <div className={`flex ${theme === 'dark' ? "bg-[black]" : "bg-white"}`} >
+            {openModal && (
+                <div className={`p-5 z-10 w-[18%] md:bg-[none] bg-[black] fixed h-screen ${theme === 'dark' ? "bg-[black]" : "bg-white"} flex flex-col gap-[15px]`}>
+                    <div className='text-[14px] mb-3 text-[#b4b4b4]'>MAIN</div>
+                    <div className="">
+                        {items.map(e => (
+                            <Link
+                                key={e.id}
+                                href={e.path}
+                                className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium 
                             ${pathname === e.path ? "bg-amber-100 font-bold text-amber-400" : ""} gap-2`}>
-                            {e.icon}
-                            <p>{e.name}</p>
-                        </Link>
-                    ))}
-                </div>
-                <div className='text-[14px] mt-5 mb-3 text-[#b4b4b4]'>ORGANIZATION</div>
-                <div className="">
-                    {items2.map(e => (
-                        <Link
-                            key={e.id}
-                            href={e.path}
-                            className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium 
+                                {e.icon}
+                                <p>{e.name}</p>
+                            </Link>
+                        ))}
+                    </div>
+                    <div className='text-[14px] mt-5 mb-3 text-[#b4b4b4]'>ORGANIZATION</div>
+                    <div className="">
+                        {items2.map(e => (
+                            <Link
+                                key={e.id}
+                                href={e.path}
+                                className={`flex p-2 cursor-pointer rounded mb-2 items-center font-medium 
                             ${pathname === e.path ? "bg-amber-100 font-bold text-amber-400" : ""} gap-2`}>
-                            {e.icon}
-                            <p>{e.name}</p>
-                        </Link>
-                    ))}
+                                {e.icon}
+                                <p>{e.name}</p>
+                            </Link>
+                        ))}
+                    </div>
                 </div>
-            </div>
-            <div className={`ml-[18%] w-full ${theme === 'dark'
+            )
+            }
+            <Button onClick={() => setOpenModal(!openModal)}>Open modal</Button>
+            <div className={`md:ml-[12%] w-full ${theme === 'dark'
                 ? 'bg-linear-to-t from-[#0a0a0f] via-[#0f172a] to-[#172554] text-gray-100'
                 : 'bg-linear-to-t from-blue-50 via-white to-blue-100 text-gray-900'}`}>
                 {children}
             </div>
-        </div>
+        </div >
     )
 }
 
